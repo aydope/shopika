@@ -1,19 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { useSearchParams } from 'react-router-dom'
-import { Sparkles, ArrowLeft, ArrowRight } from 'lucide-react'
-import { products } from '@/data/products'
+import { motion } from 'framer-motion'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { discountRatio } from '@/data/products'
+import { useProducts } from '@/store'
+import { FREE_SHIPPING_THRESHOLD } from '@/lib/pricing'
 import { ProductCard } from './ProductCard'
 import { Button } from '@/components/ui/button'
-import { Logo } from './Header'
-const words = ['LIMITED DROP', 'NO RESTOCKS', 'WEAR THE FUTURE', 'FREE SHIP $150+', 'GOLD CLUB']
+const words = ['LIMITED DROP', 'NO RESTOCKS', 'WEAR THE FUTURE', `FREE SHIP $${FREE_SHIPPING_THRESHOLD}+`, 'GOLD CLUB']
 function HeroArt() {
+  const products = useProducts()
   const top = [...products].sort((a, b) => b.rating - a.rating).slice(0, 3)
   if (!top.length) return null
   return <div className="pointer-events-none absolute right-6 top-1/2 hidden h-[26rem] w-64 -translate-y-1/2 md:block lg:right-16 lg:w-80" aria-hidden>{top.map((p, i) => <motion.img key={p.id} src={p.img} alt="" animate={{ y: [0, i % 2 ? 10 : -12, 0] }} transition={{ duration: 5 + i, repeat: Infinity, ease: 'easeInOut' }} className="absolute w-44 border-2 border-ac bg-neutral-100 object-contain shadow-2xl lg:w-56" style={{ top: i * 100, left: i * 40 - 20, rotate: (i - 1) * 7 }} />)}</div>
 }
 export function Hero() {
-  const { scrollY } = useScroll(), y = useTransform(scrollY, [0, 600], [0, 200]), r = useTransform(scrollY, [0, 600], [0, 90])
   return (
     <section id="top" className="relative grid min-h-[88svh] place-items-center overflow-hidden">
       <HeroArt />
@@ -27,6 +27,7 @@ export function Hero() {
   )
 }
 export function Slider() {
+  const products = useProducts()
   const ref = useRef<HTMLDivElement>(null), go = (d: number) => ref.current?.scrollBy({ left: d * 320, behavior: 'smooth' })
   if (!products.length) return null
   return (
@@ -37,6 +38,7 @@ export function Slider() {
   )
 }
 export function Deals() {
+  const products = useProducts()
   const [t, setT] = useState(() => 6 * 3600 + 23 * 60)
   useEffect(() => { const id = setInterval(() => setT((s) => (s > 0 ? s - 1 : 6 * 3600)), 1000); return () => clearInterval(id) }, [])
   const f = (n: number) => String(n).padStart(2, '0')
@@ -44,7 +46,7 @@ export function Deals() {
   return (
     <section id="deals" className="bg-ac py-16 text-black md:py-24"><div className="mx-auto max-w-7xl px-4">
       <div className="mb-10 flex flex-wrap items-end justify-between gap-4"><h2 className="display text-3xl sm:text-4xl md:text-7xl">FLASH SALE</h2><p className="display bg-black px-4 py-2 text-2xl sm:text-3xl text-ac" aria-label="Time left">{f(Math.floor(t / 3600))}:{f(Math.floor((t % 3600) / 60))}:{f(t % 60)}</p></div>
-      <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4 [&_article]:text-white">{[...products].filter((p) => p.old).sort((a, b) => b.old! / b.price - a.old! / a.price).slice(0, 8).map((p, i) => <ProductCard key={p.id} p={p} i={i} />)}</div>
+      <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4 [&_article]:text-white">{products.filter((p) => p.old).sort((a, b) => discountRatio(b) - discountRatio(a)).slice(0, 8).map((p, i) => <ProductCard key={p.id} p={p} i={i} />)}</div>
     </div></section>
   )
 }

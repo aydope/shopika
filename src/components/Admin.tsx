@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis, Legend } from 'recharts'
-import { DollarSign, ShoppingCart, Users, TrendingUp, AlertTriangle } from 'lucide-react'
+import { DollarSign, ShoppingCart, Users, TrendingUp, AlertTriangle, type LucideIcon } from 'lucide-react'
 import { useAuth } from '@/auth'
-import { products } from '@/data/products'
+import { useStore } from '@/store'
 import { sales, catSales, funnel, adminOrders } from '@/data/mock'
 import { usd } from '@/lib/utils'
 import { usePage } from './Utils'
@@ -11,17 +11,24 @@ const tip = { contentStyle: { background: '#000', border: '1px solid #444' } }, 
 const Card = ({ t, children, cls = '' }: { t: string; children: React.ReactNode; cls?: string }) => <section className={`border-2 border-white/10 p-4 ${cls}`}><h2 className="display mb-3 text-sm">{t}</h2><div className="h-60">{children}</div></section>
 export default function Admin() {
   usePage('Admin dashboard', 'Store analytics and operations.')
-  const { user } = useAuth(), [range, setRange] = useState(12)
+  const user = useAuth((s) => s.user)
+  const products = useStore((s) => s.products)
+  const [range, setRange] = useState(12)
   if (!user) return <Navigate to="/login" replace />
   if (user.role !== 'admin') return <div className="px-4 py-24 text-center"><h1 className="display text-2xl">Admin access only</h1><p className="mt-2 text-white/60">Sign in with an admin account to view this page.</p></div>
   const d = sales.slice(-range), rev = d.reduce((a, x) => a + x.revenue, 0), ord = d.reduce((a, x) => a + x.orders, 0), vis = d.reduce((a, x) => a + x.visitors, 0)
-  const kpi = [[DollarSign, 'Revenue', usd(rev), '+12.4%'], [ShoppingCart, 'Orders', ord.toLocaleString(), '+8.1%'], [Users, 'Visitors', vis.toLocaleString(), '+15.2%'], [TrendingUp, 'Conversion', ((ord / vis) * 100).toFixed(2) + '%', '+0.4%']]
+  const kpis: { Icon: LucideIcon; label: string; value: string; change: string }[] = [
+    { Icon: DollarSign, label: 'Revenue', value: usd(rev), change: '+12.4%' },
+    { Icon: ShoppingCart, label: 'Orders', value: ord.toLocaleString(), change: '+8.1%' },
+    { Icon: Users, label: 'Visitors', value: vis.toLocaleString(), change: '+15.2%' },
+    { Icon: TrendingUp, label: 'Conversion', value: `${((ord / vis) * 100).toFixed(2)}%`, change: '+0.4%' },
+  ]
   const low = [...products].sort((a, b) => a.stock - b.stock).slice(0, 6), top = [...products].sort((a, b) => b.count - a.count).slice(0, 5).map((p) => ({ name: p.name.slice(0, 20), units: p.count * 4 }))
   return (
     <div className="mx-auto max-w-7xl px-4 py-10">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3"><h1 className="display text-3xl sm:text-4xl">ADMIN <span className="grad">PANEL</span></h1>
-        <div role="group" aria-label="Date range" className="flex gap-2">{[3, 6, 12].map((r) => <button key={r} aria-pressed={range === r} onClick={() => setRange(r)} className={`h-10 border-2 px-4 text-xs font-bold uppercase ${range === r ? 'border-ac bg-ac text-black' : 'border-white/20'}`}>{r}M</button>)}</div></div>
-      <div className="mb-5 grid grid-cols-2 gap-3 lg:grid-cols-4">{kpi.map(([I, l, v, c]: any) => <div key={l} className="border-2 border-white/10 p-4"><I className="mb-2 text-ac" size={18} /><p className="text-xs uppercase text-white/50">{l}</p><b className="display text-xl sm:text-2xl">{v}</b><p className="text-xs text-ac">{c} vs prev.</p></div>)}</div>
+        <div role="group" aria-label="Date range" className="flex gap-2">{[3, 6, 12].map((r) => <button key={r} type="button" aria-pressed={range === r} onClick={() => setRange(r)} className={`h-10 border-2 px-4 text-xs font-bold uppercase ${range === r ? 'border-ac bg-ac text-black' : 'border-white/20'}`}>{r}M</button>)}</div></div>
+      <div className="mb-5 grid grid-cols-2 gap-3 lg:grid-cols-4">{kpis.map(({ Icon, label, value, change }) => <div key={label} className="border-2 border-white/10 p-4"><Icon className="mb-2 text-ac" size={18} /><p className="text-xs uppercase text-white/50">{label}</p><b className="display text-xl sm:text-2xl">{value}</b><p className="text-xs text-ac">{change} vs prev.</p></div>)}</div>
       <div className="grid gap-5 lg:grid-cols-3">
         <Card t="Revenue" cls="lg:col-span-2"><ResponsiveContainer><AreaChart data={d}><CartesianGrid stroke="#ffffff15" /><XAxis dataKey="m" stroke="#888" /><YAxis stroke="#888" /><Tooltip {...tip} /><Area dataKey="revenue" stroke="#c6ff00" fill="#c6ff0033" /></AreaChart></ResponsiveContainer></Card>
         <Card t="Sales by category"><ResponsiveContainer><PieChart><Pie data={catSales} dataKey="value" nameKey="name" innerRadius={45} outerRadius={80}>{catSales.map((_, i) => <Cell key={i} fill={COL[i]} stroke="none" />)}</Pie><Tooltip {...tip} /><Legend /></PieChart></ResponsiveContainer></Card>
