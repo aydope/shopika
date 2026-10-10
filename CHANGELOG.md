@@ -3,6 +3,27 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com), versioning follows [SemVer](https://semver.org).
 
+## [1.1.0] - 2026-10-10
+### Added
+- SVG logo and favicon.
+- Search results panel with products, categories, related and recent searches, trending items and keyboard control.
+- Admin dashboard tabs: overview, orders (status changes, CSV export), products, customers and promo codes.
+- Promo codes are stored with the shop data and used by the cart and checkout.
+- ESLint configuration and a `lint` script.
+- `ButtonLink` for links that look like buttons.
+
+### Changed
+- Product cards use a column layout so the buy button always lines up at the bottom of the card.
+- All internal links use React Router instead of intercepted anchors.
+- The VIP/Gold theme toggle and its styles were removed.
+- Source files are wrapped to 120 columns and written one property per line instead of compressed one-liners.
+
+### Fixed
+- Chart tooltips showed dark text on a black box.
+- Category, filter and search changes jumped back to the top of the page.
+- Links that should stay on the page caused a reload or jump to the top.
+- Controls nested inside links (a button inside an anchor).
+
 ## [1.0.1] - 2026-10-09
 ### Changed
 - The product catalog now lives in the store with an explicit loading, ready and error status instead of a mutable module array.
