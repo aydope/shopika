@@ -14,6 +14,7 @@ import { Cart } from './components/Cart'
 import { Compare } from './components/Compare'
 import { MobileBar } from './components/MobileBar'
 import { ScrollManager, ScrollUI, CookieBanner, AnnounceBar, useJsonLd } from './components/Utils'
+import { startSmoothScroll } from './lib/smoothScroll'
 
 const Account = lazy(() => import('./components/Account'))
 const Admin = lazy(() => import('./components/Admin'))
@@ -36,6 +37,8 @@ const Home = () => (
 export default function App() {
   const products = useStore((s) => s.products)
   const loadCatalog = useStore((s) => s.loadCatalog)
+
+  useEffect(() => startSmoothScroll(), [])
 
   useEffect(() => {
     const controller = new AbortController()

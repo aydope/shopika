@@ -4,6 +4,7 @@ import { motion, useScroll } from 'framer-motion'
 import { ArrowUp, Cookie, Megaphone } from 'lucide-react'
 import { useStore } from '@/store'
 import { FREE_SHIPPING_THRESHOLD } from '@/lib/pricing'
+import { scrollToElement, scrollToTop } from '@/lib/smoothScroll'
 
 const BACK_TO_TOP_OFFSET = 700
 const COOKIE_CONSENT_KEY = 'sk-cookies'
@@ -26,8 +27,8 @@ export function ScrollManager() {
     const target = hash ? document.getElementById(hash.slice(1)) : null
     const pageChanged = previousPath.current !== pathname
     previousPath.current = pathname
-    if (target) target.scrollIntoView({ behavior: 'smooth' })
-    else if (pageChanged || !hash) window.scrollTo(0, 0)
+    if (target) scrollToElement(target)
+    else if (pageChanged || !hash) scrollToTop(true)
   }, [trigger, hash, pathname])
 
   return null
@@ -53,7 +54,7 @@ export function ScrollUI() {
         <button
           type="button"
           aria-label="Back to top"
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          onClick={() => scrollToTop(false)}
           className="fixed bottom-20 right-4 z-40 grid h-11 w-11 place-items-center border-2 border-ac bg-black text-ac md:bottom-6"
         >
           <ArrowUp size={18} />

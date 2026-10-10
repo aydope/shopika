@@ -5,6 +5,7 @@ import { Minus, Plus, Trash2, X } from 'lucide-react'
 import { cartLines, useStore } from '@/store'
 import { Button } from '@/components/ui/button'
 import { FREE_SHIPPING_THRESHOLD, findPromo, priceCart } from '@/lib/pricing'
+import { LENIS_PREVENT } from '@/lib/smoothScroll'
 import { usd } from '@/lib/utils'
 
 const PAPER_STYLE = {
@@ -12,6 +13,7 @@ const PAPER_STYLE = {
   p: 2.5,
   pb: 'calc(20px + env(safe-area-inset-bottom))',
   border: '2px solid var(--ac)',
+  ...LENIS_PREVENT,
 }
 
 export function Cart() {

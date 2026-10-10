@@ -6,13 +6,14 @@ import { cartLines, useStore } from '@/store'
 import { useAuth, homeFor } from '@/auth'
 import { categoriesOf } from '@/data/products'
 import { priceCart } from '@/lib/pricing'
+import { LENIS_PREVENT } from '@/lib/smoothScroll'
 import { Button } from '@/components/ui/button'
 import { Logo } from './Logo'
 import { SearchBox } from './SearchBox'
 
 const DRAWER_LINK = 'block py-3 text-lg font-bold uppercase hover:text-ac'
 const NAV_LINK = 'hover:text-ac'
-const DRAWER_PAPER = { width: '82%', maxWidth: 340, p: 3, border: '2px solid var(--ac)' }
+const DRAWER_PAPER = { width: '82%', maxWidth: 340, p: 3, border: '2px solid var(--ac)', ...LENIS_PREVENT }
 
 export function Header() {
   const { products, cart, likes, compare, setCartOpen, setCompareOpen } = useStore()
@@ -36,7 +37,7 @@ export function Header() {
       <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-2 p-3 sm:gap-4 sm:p-4">
         <button
           type="button"
-          className="grid h-10 w-10 place-items-center md:hidden"
+          className="grid h-11 w-11 place-items-center md:hidden"
           aria-label="Open menu"
           onClick={() => setMenuOpen(true)}
         >
@@ -165,6 +166,13 @@ export function Header() {
           <Link to="/track" className={DRAWER_LINK}>
             Track order
           </Link>
+          <button
+            type="button"
+            onClick={() => setCompareOpen(true)}
+            className={`${DRAWER_LINK} w-full text-left`}
+          >
+            Compare ({compare.length})
+          </button>
           <Link to="/contact" className={DRAWER_LINK}>
             Contact
           </Link>

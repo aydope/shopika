@@ -7,6 +7,7 @@
 }
 
 :root {
+  color-scheme: dark;
   --bg: #050505;
   --fg: #f5f5f0;
   --ac: #c6ff00;
@@ -127,4 +128,58 @@ select {
 
 .drag-scroll.is-dragging * {
   pointer-events: none;
+}
+
+/* Scrollbars: slim dark track with a lime to magenta thumb (Chrome, Edge, Safari). */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b0b0b;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 2px solid #0b0b0b;
+  background: linear-gradient(180deg, var(--ac), var(--ac2));
+}
+
+::-webkit-scrollbar-thumb:hover {
+  filter: brightness(1.2);
+}
+
+::-webkit-scrollbar-corner {
+  background: #0b0b0b;
+}
+
+/* Firefox only: Chrome ignores the ::-webkit-scrollbar rules above when scrollbar-color is set. */
+@supports (-moz-appearance: none) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--ac) #0b0b0b;
+  }
+}
+
+/* Panels that scroll on their own hide the bar and fade out at the bottom to hint at more content. */
+.scroll-fade {
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 28px), transparent);
+}
+
+/* Smooth wheel scrolling (Lenis). Native smooth scrolling is turned off while Lenis is active. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
 }

@@ -178,6 +178,7 @@ export function SearchBox({ mobileOpen }: { mobileOpen: boolean }) {
         // Keeping focus on the input while pressing inside the panel stops the blur
         // from closing it before a click lands.
         <div
+          data-lenis-prevent
           onMouseDown={(e) => e.preventDefault()}
           className="absolute left-0 right-0 top-full z-50 mt-1 max-h-[75vh] overflow-y-auto border-2 border-ac bg-black md:left-auto md:w-[46rem]"
         >

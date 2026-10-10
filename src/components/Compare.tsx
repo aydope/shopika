@@ -5,6 +5,7 @@ import { useStore } from '@/store'
 import type { Product } from '@/data/products'
 import { Button } from '@/components/ui/button'
 import { usd } from '@/lib/utils'
+import { LENIS_PREVENT } from '@/lib/smoothScroll'
 import { useDragScroll } from '@/lib/useDragScroll'
 import { needsOptions, useQuickAdd } from './ProductCard'
 
@@ -14,7 +15,7 @@ export function Compare() {
   const isMobile = useMediaQuery(MOBILE_QUERY)
   const { products, compare, compareOpen, setCompareOpen, toggleCompare } = useStore()
   const quickAdd = useQuickAdd()
-  const tableRef = useDragScroll<HTMLDivElement>()
+  const { ref: tableRef } = useDragScroll<HTMLDivElement>()
 
   const selected = products.filter((p) => compare.includes(p.id))
   const lowestPrice = Math.min(...selected.map((p) => p.price))
@@ -41,6 +42,7 @@ export function Compare() {
       maxWidth="md"
       fullWidth
       fullScreen={isMobile}
+      PaperProps={LENIS_PREVENT}
     >
       <div className="p-4 sm:p-6">
         <div className="mb-4 flex items-center justify-between">
