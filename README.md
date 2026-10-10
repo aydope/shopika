@@ -37,6 +37,8 @@ Promo code `SHOPI20` gives 20% off. Admins can create more codes in the dashboar
 - Shop page with a filter sidebar (price, rating, brand, availability), filter chips and a mobile filter sheet.
   Filters are kept in the URL, so a filtered view can be shared.
 - Horizontal lists and tables can be dragged with the mouse (touch screens scroll natively).
+- Smooth inertia scrolling on desktop (Lenis) and a custom scrollbar. Phones use native scrolling.
+- Phone layout: bottom navigation, sticky Filter and Sort bar with bottom sheets, swipeable product photos.
 - Journal with articles and comments.
 - Member area with rewards tier, spending chart and order history.
 - Admin dashboard: overview charts, orders (status changes and CSV export), product inventory, customers and

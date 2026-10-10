@@ -3,6 +3,25 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com), versioning follows [SemVer](https://semver.org).
 
+## [1.3.0] - 2026-10-11
+### Added
+- Smooth inertia scrolling for mouse wheels and trackpads (Lenis). It is skipped for touch screens and for people who
+  ask for reduced motion, and scrollable panels opt out with `data-lenis-prevent`.
+- Store-style scrollbar: slim dark track with a lime to magenta thumb (Firefox gets a thin lime thumb).
+- Phone shop experience: a sticky Filter and Sort bar, a filter sheet with large toggle buttons, a sort sheet with
+  radio rows, and removable filter chips in a horizontally scrollable row.
+- Swipeable photo carousel with position dots on the product page for phones.
+- Floating "Compare" button once two products are selected, and a compare shortcut in the phone menu.
+
+### Changed
+- The desktop filter sidebar no longer shows a scrollbar; it scrolls with the wheel and fades out at the bottom.
+- The phone bottom bar now has Home, Shop, Saved and Cart with the current page highlighted and 56px touch targets.
+- Hero buttons are full width on phones; category chips and the menu button meet the 44px touch target guideline.
+
+### Fixed
+- Drag scrolling did not attach to lists that appear after the catalog loads (slider, category chips, compare table).
+  The hook now uses a callback ref.
+
 ## [1.2.0] - 2026-10-10
 ### Added
 - Drag scrolling with the mouse (with momentum) on the top picks slider, category chips, product thumbnails, compare
