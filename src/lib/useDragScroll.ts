@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useState } from 'react'
 
 const DRAG_THRESHOLD = 5
 const FRICTION = 0.94
@@ -7,13 +7,15 @@ const MIN_VELOCITY = 0.4
 /**
  * Lets a horizontally scrollable element be dragged with a mouse or pen and glide to a stop on release.
  * Touch screens already scroll natively with a finger, so touch input is left alone. A drag never triggers
- * the click on whatever is under the pointer. Add the returned ref to an element with `overflow-x-auto`.
+ * the click on whatever is under the pointer.
+ *
+ * Pass `ref` to an element with `overflow-x-auto`. It is a callback ref, so elements that mount later (for example
+ * after data has loaded) are picked up as well. `element` is the current node, for calls such as `scrollBy`.
  */
 export function useDragScroll<T extends HTMLElement>() {
-  const ref = useRef<T>(null)
+  const [element, ref] = useState<T | null>(null)
 
   useEffect(() => {
-    const element = ref.current
     if (!element) return
 
     let startX = 0
@@ -89,7 +91,7 @@ export function useDragScroll<T extends HTMLElement>() {
       window.removeEventListener('pointerup', onUp)
       window.removeEventListener('pointercancel', onUp)
     }
-  }, [])
+  }, [element])
 
-  return ref
+  return { ref, element }
 }

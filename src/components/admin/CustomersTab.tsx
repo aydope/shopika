@@ -16,7 +16,7 @@ const SORTERS: Record<SortKey, (a: (typeof customers)[number], b: (typeof custom
 const isSortKey = (value: string): value is SortKey => value in SORTERS
 
 export function CustomersTab() {
-  const tableRef = useDragScroll<HTMLDivElement>()
+  const { ref: tableRef } = useDragScroll<HTMLDivElement>()
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState<SortKey>('spent')
 

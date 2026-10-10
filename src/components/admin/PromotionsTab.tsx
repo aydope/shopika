@@ -11,7 +11,7 @@ const MAX_PERCENT = 90
 
 /** Codes created here are stored with the shop data and are accepted by the cart immediately. */
 export function PromotionsTab() {
-  const tableRef = useDragScroll<HTMLDivElement>()
+  const { ref: tableRef } = useDragScroll<HTMLDivElement>()
   const { promos, addPromo, togglePromo } = useStore()
   const [code, setCode] = useState('')
   const [percent, setPercent] = useState('10')

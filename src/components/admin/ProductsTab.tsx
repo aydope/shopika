@@ -17,7 +17,7 @@ function stockLabel(stock: number) {
 
 /** Inventory view of the live catalog. Stock edits are kept for this session only. */
 export function ProductsTab() {
-  const tableRef = useDragScroll<HTMLDivElement>()
+  const { ref: tableRef } = useDragScroll<HTMLDivElement>()
   const products = useStore((s) => s.products)
   const [stockEdits, setStockEdits] = useState<Record<string, number>>({})
   const [search, setSearch] = useState('')

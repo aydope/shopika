@@ -12,7 +12,7 @@ const STATUSES = ['Processing', 'Packed', 'Shipped', 'Delivered']
 
 /** Orders placed in this browser come first, followed by the sample orders. */
 export function OrdersTab() {
-  const tableRef = useDragScroll<HTMLDivElement>()
+  const { ref: tableRef } = useDragScroll<HTMLDivElement>()
   const { orders: placedOrders, setOrderStatus } = useStore()
   const [sampleStatus, setSampleStatus] = useState<Record<string, string>>({})
   const [search, setSearch] = useState('')
