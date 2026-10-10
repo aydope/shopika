@@ -34,6 +34,9 @@ Promo code `SHOPI20` gives 20% off. Admins can create more codes in the dashboar
   sizes, size guide, specifications and reviews, wishlist, compare, cart, checkout and order tracking.
 - Search: a large results panel with products, matching categories, related searches, recent searches and trending
   items. Keyboard shortcuts: `/` focuses the field, arrow keys move through results, Enter opens one.
+- Shop page with a filter sidebar (price, rating, brand, availability), filter chips and a mobile filter sheet.
+  Filters are kept in the URL, so a filtered view can be shared.
+- Horizontal lists and tables can be dragged with the mouse (touch screens scroll natively).
 - Journal with articles and comments.
 - Member area with rewards tier, spending chart and order history.
 - Admin dashboard: overview charts, orders (status changes and CSV export), product inventory, customers and

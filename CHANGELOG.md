@@ -3,6 +3,17 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com), versioning follows [SemVer](https://semver.org).
 
+## [1.2.0] - 2026-10-10
+### Added
+- Drag scrolling with the mouse (with momentum) on the top picks slider, category chips, product thumbnails, compare
+  table and admin tables. Touch screens keep native finger scrolling.
+- Shop filter sidebar with price range, rating, brand, on sale and in stock, removable filter chips, clear all and a
+  bottom sheet on phones. Every filter and the sort order are stored in the URL.
+
+### Changed
+- Product card redesign: round action buttons, discount badge, second photo on hover, quick-add bar, color dots, rating
+  with review count and a hard offset hover shadow.
+
 ## [1.1.0] - 2026-10-10
 ### Added
 - SVG logo and favicon.
