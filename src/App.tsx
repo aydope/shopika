@@ -34,13 +34,8 @@ const Home = () => (
 )
 
 export default function App() {
-  const premium = useStore((s) => s.premium)
   const products = useStore((s) => s.products)
   const loadCatalog = useStore((s) => s.loadCatalog)
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = premium ? 'premium' : 'dark'
-  }, [premium])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -48,7 +43,15 @@ export default function App() {
     return () => controller.abort()
   }, [loadCatalog])
 
-  useJsonLd(products.length ? { '@context': 'https://schema.org', '@type': 'ItemList', itemListElement: products.map((p, i) => ({ '@type': 'ListItem', position: i + 1, name: p.name })) } : null)
+  useJsonLd(
+    products.length
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'ItemList',
+          itemListElement: products.map((p, i) => ({ '@type': 'ListItem', position: i + 1, name: p.name })),
+        }
+      : null,
+  )
 
   return (
     <>
