@@ -15,15 +15,23 @@ export const needsOptions = (product: Product) => product.kind !== 'none'
 export function useQuickAdd() {
   const navigate = useNavigate()
   const addToCart = useStore((s) => s.addToCart)
-  return (product: Product) => (needsOptions(product) ? navigate(`/product/${product.id}`) : addToCart(product.id, '', product.colors[0][0]))
+  return (product: Product) =>
+    needsOptions(product) ? navigate(`/product/${product.id}`) : addToCart(product.id, '', product.colors[0][0])
 }
 
+const ICON_BUTTON = 'grid h-10 w-10 place-items-center bg-black/80 text-white'
+
+/**
+ * Card layout: the image has a fixed ratio, the text block grows to fill the card, and the price row is pushed to the
+ * bottom so the buy button lines up across every card in a grid row.
+ */
 export function ProductCard({ p, i = 0 }: { p: Product; i?: number }) {
   const { likes, compare, toggleLike, toggleCompare } = useStore()
   const quickAdd = useQuickAdd()
   const liked = likes.includes(p.id)
   const comparing = compare.includes(p.id)
   const selecting = needsOptions(p)
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 40 }}
@@ -31,37 +39,65 @@ export function ProductCard({ p, i = 0 }: { p: Product; i?: number }) {
       viewport={{ once: true }}
       transition={{ delay: (i % 4) * 0.05 }}
       whileHover={{ y: -8 }}
-      className="group w-full border-2 border-white/10 bg-card hover:border-ac"
+      className="group flex h-full w-full flex-col border-2 border-white/10 bg-card hover:border-ac"
     >
-      <div className="relative aspect-square overflow-hidden bg-neutral-100">
+      <div className="relative aspect-square shrink-0 overflow-hidden bg-neutral-100">
         <Link to={`/product/${p.id}`} aria-label={p.name}>
-          <img src={p.img} alt={p.name} loading="lazy" className="h-full w-full object-contain p-4 transition duration-500 group-hover:scale-110" />
+          <img
+            src={p.img}
+            alt={p.name}
+            loading="lazy"
+            className="h-full w-full object-contain p-4 transition duration-500 group-hover:scale-110"
+          />
         </Link>
         <span className="display absolute left-2 top-2 bg-ac px-2 py-1 text-[10px] text-black">{p.tag}</span>
         {p.stock <= LOW_STOCK_THRESHOLD && (
-          <span className="absolute bottom-2 left-2 bg-ac2 px-2 py-1 text-[10px] font-bold uppercase text-black">Only {p.stock} left</span>
+          <span className="absolute bottom-2 left-2 bg-ac2 px-2 py-1 text-[10px] font-bold uppercase text-black">
+            Only {p.stock} left
+          </span>
         )}
         <div className="absolute right-2 top-2 flex flex-col gap-2">
-          <button type="button" aria-label="Like" aria-pressed={liked} onClick={() => toggleLike(p.id)} className={cn('grid h-10 w-10 place-items-center bg-black/80 text-white', liked && 'text-ac2')}>
+          <button
+            type="button"
+            aria-label="Like"
+            aria-pressed={liked}
+            onClick={() => toggleLike(p.id)}
+            className={cn(ICON_BUTTON, liked && 'text-ac2')}
+          >
             <Heart size={18} fill={liked ? 'currentColor' : 'none'} />
           </button>
-          <button type="button" aria-label="Compare" aria-pressed={comparing} onClick={() => toggleCompare(p.id)} className={cn('grid h-10 w-10 place-items-center bg-black/80 text-white', comparing && 'text-ac')}>
+          <button
+            type="button"
+            aria-label="Compare"
+            aria-pressed={comparing}
+            onClick={() => toggleCompare(p.id)}
+            className={cn(ICON_BUTTON, comparing && 'text-ac')}
+          >
             <GitCompare size={18} />
           </button>
         </div>
       </div>
-      <div className="space-y-2 p-3 sm:p-4">
-        <p className="text-xs uppercase text-white/50">{p.brand}</p>
-        <Link to={`/product/${p.id}`} className="display line-clamp-2 block min-h-[2.5rem] text-sm hover:text-ac sm:text-base">
+
+      <div className="flex flex-1 flex-col gap-2 p-3 sm:p-4">
+        <p className="truncate text-xs uppercase text-white/50">{p.brand}</p>
+        <Link
+          to={`/product/${p.id}`}
+          className="display line-clamp-2 min-h-[2.5rem] text-sm hover:text-ac sm:text-base"
+        >
           {p.name}
         </Link>
         <Rating value={p.rating} precision={0.1} readOnly size="small" />
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <p>
-            <b className="text-lg text-ac sm:text-xl">{usd(p.price)}</b>
-            {p.old && <s className="ml-2 text-sm text-white/40">{usd(p.old)}</s>}
+        <div className="mt-auto flex items-end justify-between gap-2 pt-2">
+          <p className="min-w-0 leading-tight">
+            <b className="block text-lg text-ac sm:text-xl">{usd(p.price)}</b>
+            <span className="block h-4 text-sm text-white/40">{p.old && <s>{usd(p.old)}</s>}</span>
           </p>
-          <Button size="sm" onClick={() => quickAdd(p)} aria-label={selecting ? `Choose options for ${p.name}` : `Add ${p.name} to cart`}>
+          <Button
+            size="sm"
+            className="shrink-0"
+            onClick={() => quickAdd(p)}
+            aria-label={selecting ? `Choose options for ${p.name}` : `Add ${p.name} to cart`}
+          >
             <Plus size={14} />
             <span className="hidden sm:inline">{selecting ? 'Select' : 'Add'}</span>
           </Button>
