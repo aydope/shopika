@@ -19,6 +19,7 @@ import { useStore } from '@/store'
 import { sizesFor, type Product, type Review } from '@/data/products'
 import { FREE_SHIPPING_THRESHOLD } from '@/lib/pricing'
 import { cn, usd } from '@/lib/utils'
+import { LENIS_PREVENT } from '@/lib/smoothScroll'
 import { useDragScroll } from '@/lib/useDragScroll'
 import { Button } from '@/components/ui/button'
 import { ProductCard } from './ProductCard'
@@ -80,44 +81,81 @@ export default function ProductPage() {
 }
 
 function Gallery({ product }: { product: Product }) {
-  const thumbsRef = useDragScroll<HTMLDivElement>()
+  const { ref: thumbsRef } = useDragScroll<HTMLDivElement>()
   const [index, setIndex] = useState(0)
+  const [slide, setSlide] = useState(0)
   const [zoom, setZoom] = useState<ZoomPoint | null>(null)
+  const photoCount = product.images.length
   const trackPointer = (event: MouseEvent<HTMLDivElement>) => {
     const box = event.currentTarget.getBoundingClientRect()
     setZoom({ x: ((event.clientX - box.left) / box.width) * 100, y: ((event.clientY - box.top) / box.height) * 100 })
   }
+
   return (
     <div>
-      <div
-        className="relative aspect-square cursor-zoom-in overflow-hidden border-2 border-ac bg-neutral-100"
-        onMouseMove={trackPointer}
-        onMouseLeave={() => setZoom(null)}
-      >
-        <img
-          src={product.images[index]}
-          alt={`${product.name}, view ${index + 1}`}
-          className="h-full w-full object-contain p-4 transition-transform duration-200"
-          style={zoom ? { transform: `scale(${ZOOM_SCALE})`, transformOrigin: `${zoom.x}% ${zoom.y}%` } : undefined}
-        />
-        <span className="display absolute left-3 top-3 bg-ac px-3 py-1 text-xs text-black">{product.tag}</span>
-      </div>
-      {product.images.length > 1 && (
-        <div ref={thumbsRef} className="drag-scroll no-sb mt-3 flex gap-2 overflow-x-auto">
-          {product.images.map((src, i) => (
-            <button
-              key={src}
-              type="button"
-              aria-label={`Show image ${i + 1}`}
-              aria-current={index === i}
-              onClick={() => setIndex(i)}
-              className={`h-20 w-20 shrink-0 border-2 bg-neutral-100 ${index === i ? 'border-ac' : 'border-white/10'}`}
-            >
-              <img src={src} alt="" loading="lazy" className="h-full w-full object-contain" />
-            </button>
-          ))}
+      {/* Phones: swipe through the photos, with dots showing the position. */}
+      <div className="md:hidden">
+        <div className="relative">
+          <div
+            className="no-sb flex snap-x snap-mandatory overflow-x-auto border-2 border-ac bg-neutral-100"
+            onScroll={(e) => setSlide(Math.round(e.currentTarget.scrollLeft / e.currentTarget.clientWidth))}
+          >
+            {product.images.map((src, i) => (
+              <img
+                key={src}
+                src={src}
+                alt={`${product.name}, photo ${i + 1} of ${photoCount}`}
+                loading={i === 0 ? 'eager' : 'lazy'}
+                className="aspect-square w-full shrink-0 snap-center object-contain p-4"
+              />
+            ))}
+          </div>
+          <span className="display absolute left-3 top-3 bg-ac px-3 py-1 text-xs text-black">{product.tag}</span>
         </div>
-      )}
+        {photoCount > 1 && (
+          <div className="mt-3 flex justify-center gap-2" aria-hidden>
+            {product.images.map((src, i) => (
+              <span key={src} className={cn('h-2 w-2 rounded-full', slide === i ? 'bg-ac' : 'bg-white/25')} />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Larger screens: hover to zoom, with clickable thumbnails. */}
+      <div className="hidden md:block">
+        <div
+          className="relative aspect-square cursor-zoom-in overflow-hidden border-2 border-ac bg-neutral-100"
+          onMouseMove={trackPointer}
+          onMouseLeave={() => setZoom(null)}
+        >
+          <img
+            src={product.images[index]}
+            alt={`${product.name}, view ${index + 1}`}
+            className="h-full w-full object-contain p-4 transition-transform duration-200"
+            style={zoom ? { transform: `scale(${ZOOM_SCALE})`, transformOrigin: `${zoom.x}% ${zoom.y}%` } : undefined}
+          />
+          <span className="display absolute left-3 top-3 bg-ac px-3 py-1 text-xs text-black">{product.tag}</span>
+        </div>
+        {photoCount > 1 && (
+          <div ref={thumbsRef} className="drag-scroll no-sb mt-3 flex gap-2 overflow-x-auto">
+            {product.images.map((src, i) => (
+              <button
+                key={src}
+                type="button"
+                aria-label={`Show image ${i + 1}`}
+                aria-current={index === i}
+                onClick={() => setIndex(i)}
+                className={cn(
+                  'h-20 w-20 shrink-0 border-2 bg-neutral-100',
+                  index === i ? 'border-ac' : 'border-white/10',
+                )}
+              >
+                <img src={src} alt="" loading="lazy" className="h-full w-full object-contain" />
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
@@ -126,7 +164,7 @@ type SizeGuideProps = { product: Product; sizes: string[]; open: boolean; onClos
 
 function SizeGuide({ product, sizes, open, onClose }: SizeGuideProps) {
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
+    <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth PaperProps={LENIS_PREVENT}>
       <div className="p-5">
         <h2 className="display mb-3 text-lg">Size guide</h2>
         {product.kind === 'cloth' ? (

@@ -66,8 +66,10 @@ export function Hero() {
           BE SEEN.
         </motion.h1>
         <div className="mt-8 flex flex-wrap gap-3 pb-24">
-          <ButtonLink to="/#drops">Shop the drop</ButtonLink>
-          <ButtonLink to="/#deals" variant="outline">
+          <ButtonLink to="/#drops" className="flex-1 sm:flex-none">
+            Shop the drop
+          </ButtonLink>
+          <ButtonLink to="/#deals" variant="outline" className="flex-1 sm:flex-none">
             Flash deals
           </ButtonLink>
         </div>
@@ -87,9 +89,9 @@ export function Hero() {
 
 export function Slider() {
   const products = useProducts()
-  const trackRef = useDragScroll<HTMLDivElement>()
+  const { ref: trackRef, element: track } = useDragScroll<HTMLDivElement>()
   const scrollBy = (direction: number) =>
-    trackRef.current?.scrollBy({ left: direction * SLIDER_STEP, behavior: 'smooth' })
+    track?.scrollBy({ left: direction * SLIDER_STEP, behavior: 'smooth' })
   if (products.length === 0) return null
 
   const topRated = [...products].sort((a, b) => b.rating - a.rating).slice(0, SLIDER_ITEMS)
