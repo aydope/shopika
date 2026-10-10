@@ -6,11 +6,13 @@ import { downloadCsv } from '@/lib/csv'
 import { usd } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { StatCard, inputClass } from './ChartCard'
+import { useDragScroll } from '@/lib/useDragScroll'
 
 const STATUSES = ['Processing', 'Packed', 'Shipped', 'Delivered']
 
 /** Orders placed in this browser come first, followed by the sample orders. */
 export function OrdersTab() {
+  const tableRef = useDragScroll<HTMLDivElement>()
   const { orders: placedOrders, setOrderStatus } = useStore()
   const [sampleStatus, setSampleStatus] = useState<Record<string, string>>({})
   const [search, setSearch] = useState('')
@@ -80,7 +82,7 @@ export function OrdersTab() {
         </Button>
       </div>
 
-      <div className="overflow-x-auto border-2 border-white/10">
+      <div ref={tableRef} className="drag-scroll overflow-x-auto border-2 border-white/10">
         <table className="w-full min-w-[560px] text-left text-sm">
           <thead className="text-xs uppercase text-white/50">
             <tr>

@@ -4,6 +4,7 @@ import { customers } from '@/data/mock'
 import { AXIS_COLOR, GRID_COLOR, tooltipStyle } from '@/lib/chartTheme'
 import { usd } from '@/lib/utils'
 import { ChartCard, StatCard, inputClass } from './ChartCard'
+import { useDragScroll } from '@/lib/useDragScroll'
 
 type SortKey = 'spent' | 'orders' | 'joined'
 const SORTERS: Record<SortKey, (a: (typeof customers)[number], b: (typeof customers)[number]) => number> = {
@@ -15,6 +16,7 @@ const SORTERS: Record<SortKey, (a: (typeof customers)[number], b: (typeof custom
 const isSortKey = (value: string): value is SortKey => value in SORTERS
 
 export function CustomersTab() {
+  const tableRef = useDragScroll<HTMLDivElement>()
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState<SortKey>('spent')
 
@@ -66,7 +68,7 @@ export function CustomersTab() {
         </select>
       </div>
 
-      <div className="overflow-x-auto border-2 border-white/10">
+      <div ref={tableRef} className="drag-scroll overflow-x-auto border-2 border-white/10">
         <table className="w-full min-w-[560px] text-left text-sm">
           <thead className="text-xs uppercase text-white/50">
             <tr>

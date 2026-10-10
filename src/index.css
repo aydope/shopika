@@ -108,3 +108,23 @@ select {
   color: #000;
   font-weight: 700;
 }
+
+/* Horizontal drag scrolling (see useDragScroll). Touch screens scroll natively. */
+.drag-scroll {
+  overscroll-behavior-x: contain;
+}
+
+.drag-scroll.is-scrollable {
+  cursor: grab;
+}
+
+.drag-scroll.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+  scroll-behavior: auto;
+  scroll-snap-type: none !important; /* overrides the Tailwind snap utilities while the pointer controls the position */
+}
+
+.drag-scroll.is-dragging * {
+  pointer-events: none;
+}

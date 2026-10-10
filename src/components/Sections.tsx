@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { discountRatio } from '@/data/products'
 import { useProducts } from '@/store'
 import { FREE_SHIPPING_THRESHOLD } from '@/lib/pricing'
+import { useDragScroll } from '@/lib/useDragScroll'
 import { Button, ButtonLink } from '@/components/ui/button'
 import { ProductCard } from './ProductCard'
 
@@ -86,7 +87,7 @@ export function Hero() {
 
 export function Slider() {
   const products = useProducts()
-  const trackRef = useRef<HTMLDivElement>(null)
+  const trackRef = useDragScroll<HTMLDivElement>()
   const scrollBy = (direction: number) =>
     trackRef.current?.scrollBy({ left: direction * SLIDER_STEP, behavior: 'smooth' })
   if (products.length === 0) return null
@@ -107,7 +108,10 @@ export function Slider() {
           </Button>
         </div>
       </div>
-      <div ref={trackRef} className="no-sb flex snap-x snap-mandatory items-stretch gap-5 overflow-x-auto pb-4">
+      <div
+        ref={trackRef}
+        className="drag-scroll no-sb flex snap-x snap-mandatory items-stretch gap-5 overflow-x-auto pb-4"
+      >
         {topRated.map((product, index) => (
           <div key={product.id} className="w-[72vw] max-w-[290px] shrink-0 snap-start">
             <ProductCard p={product} i={index} />

@@ -4,6 +4,7 @@ import { categoriesOf } from '@/data/products'
 import { usd } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { StatCard, inputClass } from './ChartCard'
+import { useDragScroll } from '@/lib/useDragScroll'
 
 const LOW_STOCK = 10
 const PAGE_SIZE = 15
@@ -16,6 +17,7 @@ function stockLabel(stock: number) {
 
 /** Inventory view of the live catalog. Stock edits are kept for this session only. */
 export function ProductsTab() {
+  const tableRef = useDragScroll<HTMLDivElement>()
   const products = useStore((s) => s.products)
   const [stockEdits, setStockEdits] = useState<Record<string, number>>({})
   const [search, setSearch] = useState('')
@@ -73,7 +75,7 @@ export function ProductsTab() {
         </label>
       </div>
 
-      <div className="overflow-x-auto border-2 border-white/10">
+      <div ref={tableRef} className="drag-scroll overflow-x-auto border-2 border-white/10">
         <table className="w-full min-w-[640px] text-left text-sm">
           <thead className="text-xs uppercase text-white/50">
             <tr>
