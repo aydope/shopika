@@ -19,6 +19,7 @@ import { useStore } from '@/store'
 import { sizesFor, type Product, type Review } from '@/data/products'
 import { FREE_SHIPPING_THRESHOLD } from '@/lib/pricing'
 import { cn, usd } from '@/lib/utils'
+import { useDragScroll } from '@/lib/useDragScroll'
 import { Button } from '@/components/ui/button'
 import { ProductCard } from './ProductCard'
 import { Comments } from './Comments'
@@ -79,6 +80,7 @@ export default function ProductPage() {
 }
 
 function Gallery({ product }: { product: Product }) {
+  const thumbsRef = useDragScroll<HTMLDivElement>()
   const [index, setIndex] = useState(0)
   const [zoom, setZoom] = useState<ZoomPoint | null>(null)
   const trackPointer = (event: MouseEvent<HTMLDivElement>) => {
@@ -101,7 +103,7 @@ function Gallery({ product }: { product: Product }) {
         <span className="display absolute left-3 top-3 bg-ac px-3 py-1 text-xs text-black">{product.tag}</span>
       </div>
       {product.images.length > 1 && (
-        <div className="no-sb mt-3 flex gap-2 overflow-x-auto">
+        <div ref={thumbsRef} className="drag-scroll no-sb mt-3 flex gap-2 overflow-x-auto">
           {product.images.map((src, i) => (
             <button
               key={src}
