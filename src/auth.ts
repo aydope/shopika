@@ -26,7 +26,8 @@ type AuthState = {
 }
 
 const isRole = (value: unknown): value is Role => value === 'admin' || value === 'member'
-const isUser = (value: unknown): value is User => isRecord(value) && hasString(value, 'name') && hasString(value, 'email') && isRole(value.role)
+const isUser = (value: unknown): value is User =>
+  isRecord(value) && hasString(value, 'name') && hasString(value, 'email') && isRole(value.role)
 const isAccount = (value: unknown): value is Account => isUser(value) && isRecord(value) && hasString(value, 'password')
 
 const toUser = ({ name, email, role }: Account): User => ({ name, email, role })
@@ -38,7 +39,9 @@ export const useAuth = create<AuthState>()(
       accounts: [],
       login: (email, password) => {
         const normalized = email.trim().toLowerCase()
-        const account = [...TEST_ACCOUNTS, ...get().accounts].find((a) => a.email === normalized && a.password === password)
+        const account = [...TEST_ACCOUNTS, ...get().accounts].find(
+          (a) => a.email === normalized && a.password === password,
+        )
         if (!account) return { error: 'Email or password is incorrect' }
         const user = toUser(account)
         set({ user })
@@ -46,7 +49,9 @@ export const useAuth = create<AuthState>()(
       },
       register: (name, email, password) => {
         const normalized = email.trim().toLowerCase()
-        if ([...TEST_ACCOUNTS, ...get().accounts].some((a) => a.email === normalized)) return { error: 'An account with this email already exists' }
+        if ([...TEST_ACCOUNTS, ...get().accounts].some((a) => a.email === normalized)) {
+          return { error: 'An account with this email already exists' }
+        }
         const account: Account = { name, email: normalized, password, role: 'member' }
         set((s) => ({ accounts: [...s.accounts, account], user: toUser(account) }))
         return { user: toUser(account) }
@@ -57,7 +62,11 @@ export const useAuth = create<AuthState>()(
       name: 'shopika-auth',
       merge: (stored, current) => {
         if (!isRecord(stored)) return current
-        return { ...current, user: isUser(stored.user) ? stored.user : null, accounts: Array.isArray(stored.accounts) ? stored.accounts.filter(isAccount) : [] }
+        return {
+          ...current,
+          user: isUser(stored.user) ? stored.user : null,
+          accounts: Array.isArray(stored.accounts) ? stored.accounts.filter(isAccount) : [],
+        }
       },
     },
   ),

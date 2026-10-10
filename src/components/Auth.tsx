@@ -25,14 +25,29 @@ export function Login() {
       <h1 className="display mb-6 text-3xl sm:text-4xl">SIGN <span className="grad">IN</span></h1>
       <form noValidate onSubmit={(e) => { e.preventDefault(); signIn() }} className="space-y-4">
         <Field label="Email" type="email" autoComplete="email" value={email} onChange={setEmail} />
-        <Field label="Password" type="password" autoComplete="current-password" value={password} onChange={setPassword} error={error} />
+        <Field
+          label="Password"
+          type="password"
+          autoComplete="current-password"
+          value={password}
+          onChange={setPassword}
+          error={error}
+        />
         <Button type="submit" className="w-full">Sign in</Button>
       </form>
-      <p className="mt-4 text-sm text-white/60">New here? <Link to="/register" className="text-ac underline">Create an account</Link></p>
+      <p className="mt-4 text-sm text-white/60">
+        New here?{' '}
+        <Link to="/register" className="text-ac underline">Create an account</Link>
+      </p>
       <div className="mt-8 border border-white/20 p-4 text-sm">
         <p className="display mb-2 text-xs text-ac">TEST ACCOUNTS</p>
         {TEST_ACCOUNTS.map((account) => (
-          <button key={account.email} type="button" onClick={() => { setEmail(account.email); setPassword(account.password); signIn(account) }} className="block w-full py-2 text-left hover:text-ac">
+          <button
+            key={account.email}
+            type="button"
+            onClick={() => { setEmail(account.email); setPassword(account.password); signIn(account) }}
+            className="block w-full py-2 text-left hover:text-ac"
+          >
             {account.role === 'admin' ? 'Admin dashboard' : 'Member dashboard'}: {account.email} / {account.password}
           </button>
         ))}
@@ -71,12 +86,35 @@ export function Register() {
       <p className="mb-6 text-white/60">Earn points on every order and get early access to drops.</p>
       <form noValidate onSubmit={(e) => { e.preventDefault(); submit() }} className="space-y-4">
         <Field label="Full name" autoComplete="name" value={form.name} onChange={update('name')} error={errors.name} />
-        <Field label="Email" type="email" autoComplete="email" value={form.email} onChange={update('email')} error={errors.email} />
-        <Field label="Password" type="password" autoComplete="new-password" value={form.password} onChange={update('password')} error={errors.password} />
-        <p className="text-xs text-white/50">By creating an account you accept our <Link to="/terms" className="text-ac underline">Terms</Link> and <Link to="/privacy" className="text-ac underline">Privacy Policy</Link>.</p>
+        <Field
+          label="Email"
+          type="email"
+          autoComplete="email"
+          value={form.email}
+          onChange={update('email')}
+          error={errors.email}
+        />
+        <Field
+          label="Password"
+          type="password"
+          autoComplete="new-password"
+          value={form.password}
+          onChange={update('password')}
+          error={errors.password}
+        />
+        <p className="text-xs text-white/50">
+          By creating an account you accept our{' '}
+          <Link to="/terms" className="text-ac underline">Terms</Link>
+          and{' '}
+          <Link to="/privacy" className="text-ac underline">Privacy Policy</Link>
+          .
+        </p>
         <Button type="submit" className="w-full">Create account</Button>
       </form>
-      <p className="mt-4 text-sm text-white/60">Already a member? <Link to="/login" className="text-ac underline">Sign in</Link></p>
+      <p className="mt-4 text-sm text-white/60">
+        Already a member?{' '}
+        <Link to="/login" className="text-ac underline">Sign in</Link>
+      </p>
     </div>
   )
 }

@@ -37,7 +37,14 @@ const CATEGORIES = new Map<string, { label: string; kind: ProductKind }>([
   ['sunglasses', { label: 'Sunglasses', kind: 'none' }],
 ])
 // The API has no color variants, so each product gets a deterministic set from this palette.
-const PALETTE: [string, string][] = [['Black', '#111111'], ['White', '#f5f5f5'], ['Lime', '#c6ff00'], ['Magenta', '#ff2bd6'], ['Navy', '#1e3a8a'], ['Sand', '#d6c7a1']]
+const PALETTE: [string, string][] = [
+  ['Black', '#111111'],
+  ['White', '#f5f5f5'],
+  ['Lime', '#c6ff00'],
+  ['Magenta', '#ff2bd6'],
+  ['Navy', '#1e3a8a'],
+  ['Sand', '#d6c7a1'],
+]
 
 interface ApiReview { reviewerName: string; comment: string; date: string; rating: number }
 interface ApiProduct {
@@ -66,16 +73,26 @@ interface ApiProduct {
 
 /** Only the fields every consumer relies on are validated; optional fields are handled in toProduct. */
 function isApiProduct(value: unknown): value is ApiProduct {
-  return isRecord(value) && hasNumber(value, 'id') && hasString(value, 'title') && hasString(value, 'category') && hasNumber(value, 'price') && hasString(value, 'thumbnail')
+  return (
+    isRecord(value) &&
+    hasNumber(value, 'id') &&
+    hasString(value, 'title') &&
+    hasString(value, 'category') &&
+    hasNumber(value, 'price') &&
+    hasString(value, 'thumbnail')
+  )
 }
 
 export const categoriesOf = (products: Product[]) => [...new Set(products.map((p) => p.cat))]
 
 export const discountRatio = (p: Product) => (p.old ? p.old / p.price : 0)
 
+const MEN_SHOE_SIZES = ['40', '41', '42', '43', '44', '45', '46']
+const WOMEN_SHOE_SIZES = ['36', '37', '38', '39', '40', '41']
+
 export const sizesFor = (p: Product) => {
   if (p.kind === 'cloth') return ['XS', 'S', 'M', 'L', 'XL']
-  if (p.kind === 'shoe') return p.cat.startsWith("Men's") ? ['40', '41', '42', '43', '44', '45', '46'] : ['36', '37', '38', '39', '40', '41']
+  if (p.kind === 'shoe') return p.cat.startsWith("Men's") ? MEN_SHOE_SIZES : WOMEN_SHOE_SIZES
   return []
 }
 
@@ -89,7 +106,8 @@ function toProduct(api: ApiProduct, label: string, kind: ProductKind): Product {
   addSpec('SKU', api.sku)
   addSpec('Category', label)
   addSpec('Weight', api.weight === undefined ? undefined : `${api.weight} oz`)
-  addSpec('Dimensions', api.dimensions && `${api.dimensions.width} x ${api.dimensions.height} x ${api.dimensions.depth} cm`)
+  const size = api.dimensions
+  addSpec('Dimensions', size && `${size.width} x ${size.height} x ${size.depth} cm`)
   addSpec('Warranty', api.warrantyInformation)
   addSpec('Shipping', api.shippingInformation)
   addSpec('Returns', api.returnPolicy)
@@ -113,7 +131,14 @@ function toProduct(api: ApiProduct, label: string, kind: ProductKind): Product {
     stock: api.stock,
     colors: [0, 1, 2, 3].map((offset) => PALETTE[(api.id + offset) % PALETTE.length]),
     specs,
-    reviews: (api.reviews ?? []).map((r, i) => ({ id: `r${api.id}-${i}`, name: r.reviewerName, text: r.comment, date: String(r.date).slice(0, 10), rating: r.rating, likes: (i * 3 + api.id) % 9 })),
+    reviews: (api.reviews ?? []).map((r, i) => ({
+      id: `r${api.id}-${i}`,
+      name: r.reviewerName,
+      text: r.comment,
+      date: String(r.date).slice(0, 10),
+      rating: r.rating,
+      likes: (i * 3 + api.id) % 9,
+    })),
   }
 }
 

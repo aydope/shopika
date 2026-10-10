@@ -6,6 +6,7 @@ import { useAuth } from '@/auth'
 import { hasErrors, hasMinLength, type FormErrors } from '@/lib/validation'
 import { Button } from '@/components/ui/button'
 import { Field } from '@/components/ui/field'
+import { cn } from '@/lib/utils'
 import type { Review } from '@/data/products'
 import { useTransientFlag } from './Utils'
 
@@ -14,7 +15,9 @@ const CONFIRMATION_MS = 3000
 const newCommentId = () => `c${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
 
 /** Comment thread for a product or article. `threadKey` identifies the thread; `rated` adds a star rating. */
-export function Comments({ threadKey, initialReviews, rated = false }: { threadKey: string; initialReviews: Review[]; rated?: boolean }) {
+type CommentsProps = { threadKey: string; initialReviews: Review[]; rated?: boolean }
+
+export function Comments({ threadKey, initialReviews, rated = false }: CommentsProps) {
   const { comments, addComment, voted, toggleVote } = useStore()
   const user = useAuth((s) => s.user)
   const [name, setName] = useState(user?.name ?? '')
@@ -32,7 +35,14 @@ export function Comments({ threadKey, initialReviews, rated = false }: { threadK
     if (rated && rating === null) found.rating = 'Please choose a rating'
     setErrors(found)
     if (hasErrors(found)) return
-    addComment(threadKey, { id: newCommentId(), name: name.trim(), text: text.trim(), date: new Date().toISOString().slice(0, 10), rating: rated ? (rating ?? undefined) : undefined, likes: 0 })
+    addComment(threadKey, {
+      id: newCommentId(),
+      name: name.trim(),
+      text: text.trim(),
+      date: new Date().toISOString().slice(0, 10),
+      rating: rated ? (rating ?? undefined) : undefined,
+      likes: 0,
+    })
     setText('')
     setRating(null)
     showPosted()
@@ -41,7 +51,11 @@ export function Comments({ threadKey, initialReviews, rated = false }: { threadK
   return (
     <section aria-label={rated ? 'Reviews' : 'Comments'}>
       <h3 className="display mb-4 text-lg">{rated ? 'Reviews' : 'Comments'} ({thread.length})</h3>
-      <form noValidate onSubmit={(e) => { e.preventDefault(); submit() }} className="mb-8 space-y-3 border-2 border-white/10 p-4">
+      <form
+        noValidate
+        onSubmit={(e) => { e.preventDefault(); submit() }}
+        className="mb-8 space-y-3 border-2 border-white/10 p-4"
+      >
         <Field label="Name" autoComplete="name" value={name} onChange={setName} error={errors.name} />
         {rated && (
           <div>
@@ -62,7 +76,9 @@ export function Comments({ threadKey, initialReviews, rated = false }: { threadK
           return (
             <li key={comment.id} className="border border-white/10 p-4">
               <div className="mb-2 flex items-center gap-3">
-                <span className="grid h-9 w-9 shrink-0 place-items-center bg-ac font-black text-black">{comment.name[0]?.toUpperCase()}</span>
+                <span className="grid h-9 w-9 shrink-0 place-items-center bg-ac font-black text-black">
+                  {comment.name[0]?.toUpperCase()}
+                </span>
                 <div className="min-w-0 flex-1">
                   <b className="block text-sm">{comment.name}</b>
                   <span className="text-xs text-white/50">{comment.date}</span>
@@ -70,7 +86,15 @@ export function Comments({ threadKey, initialReviews, rated = false }: { threadK
                 {comment.rating && <Rating value={comment.rating} readOnly size="small" />}
               </div>
               <p className="text-sm text-white/80">{comment.text}</p>
-              <button type="button" onClick={() => toggleVote(comment.id)} aria-pressed={hasVoted} className={`mt-3 inline-flex h-9 items-center gap-2 border px-3 text-xs ${hasVoted ? 'border-ac text-ac' : 'border-white/20 text-white/60'}`}>
+              <button
+                type="button"
+                onClick={() => toggleVote(comment.id)}
+                aria-pressed={hasVoted}
+                className={cn(
+                  'mt-3 inline-flex h-9 items-center gap-2 border px-3 text-xs',
+                  hasVoted ? 'border-ac text-ac' : 'border-white/20 text-white/60',
+                )}
+              >
                 <ThumbsUp size={14} />Helpful ({comment.likes + (hasVoted ? 1 : 0)})
               </button>
             </li>

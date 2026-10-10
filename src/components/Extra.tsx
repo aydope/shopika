@@ -1,7 +1,25 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
-import { Shirt, Sparkles, Gem, Footprints, Watch, ShoppingBag, Glasses, Tag, Truck, RefreshCw, ShieldCheck, Headphones, ChevronDown, Quote, Check, ArrowUpRight, type LucideIcon } from 'lucide-react'
+import {
+  Shirt,
+  Sparkles,
+  Gem,
+  Footprints,
+  Watch,
+  ShoppingBag,
+  Glasses,
+  Tag,
+  Truck,
+  RefreshCw,
+  ShieldCheck,
+  Headphones,
+  ChevronDown,
+  Quote,
+  Check,
+  ArrowUpRight,
+  type LucideIcon,
+} from 'lucide-react'
 import { FaInstagram, FaTiktok, FaXTwitter, FaDiscord } from 'react-icons/fa6'
 import type { IconType } from 'react-icons'
 import { categoriesOf } from '@/data/products'
@@ -9,7 +27,7 @@ import { useProducts } from '@/store'
 import { FREE_SHIPPING_THRESHOLD } from '@/lib/pricing'
 import { isEmail } from '@/lib/validation'
 import { Button } from '@/components/ui/button'
-import { Logo } from './Header'
+import { Logo } from './Logo'
 
 const CATEGORY_ICONS: Record<string, LucideIcon> = {
   "Men's Shirts": Shirt,
@@ -37,10 +55,22 @@ export function Categories() {
           const cover = products.find((p) => p.cat === category)
           if (!cover) return null
           return (
-            <Link key={category} to={`/shop?cat=${encodeURIComponent(category)}`} className="group relative block aspect-square overflow-hidden border-2 border-white/10 bg-neutral-100 hover:border-ac">
-              <img src={cover.img} alt="" loading="lazy" className="h-full w-full object-contain p-6 transition duration-500 group-hover:scale-110" />
+            <Link
+              key={category}
+              to={`/shop?cat=${encodeURIComponent(category)}`}
+              className="group relative block aspect-square overflow-hidden border-2 border-white/10 bg-neutral-100 hover:border-ac"
+            >
+              <img
+                src={cover.img}
+                alt=""
+                loading="lazy"
+                className="h-full w-full object-contain p-6 transition duration-500 group-hover:scale-110"
+              />
               <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-black p-3">
-                <span className="display flex items-center gap-2 text-sm"><Icon size={18} className="text-ac" />{category}</span>
+                <span className="display flex items-center gap-2 text-sm">
+                  <Icon size={18} className="text-ac" />
+                  {category}
+                </span>
                 <ArrowUpRight size={18} className="text-ac" />
               </div>
             </Link>
@@ -89,7 +119,9 @@ export function Testimonials() {
             <Quote className="mb-3 text-ac2" />
             <blockquote className="mb-4 text-white/70">{quote.text}</blockquote>
             <figcaption className="flex items-center gap-3">
-              <span className="grid h-10 w-10 shrink-0 place-items-center bg-ac font-black text-black">{quote.name[0]}</span>
+              <span className="grid h-10 w-10 shrink-0 place-items-center bg-ac font-black text-black">
+                {quote.name[0]}
+              </span>
               <div>
                 <b className="block text-sm">{quote.name}</b>
                 <span className="line-clamp-1 text-xs text-white/50">on {quote.product}</span>
@@ -105,7 +137,7 @@ export function Testimonials() {
 const FAQ: [question: string, answer: string][] = [
   ['How long does shipping take?', 'Orders ship within 24h. Delivery takes 3-7 business days in most regions.'],
   ['Can I return an item?', 'Yes. Free returns within 30 days, as long as the item is unworn with tags.'],
-  ['What is VIP Gold mode?', 'A premium theme for inner-circle customers. Toggle it with the crown button in the header.'],
+  ['Can I track my order?', 'Yes. Enter your order number on the Track order page to see its current status.'],
   ['Do you restock drops?', 'Never. When a limited piece is gone, it is gone.'],
 ]
 
@@ -113,7 +145,11 @@ export const Faq = () => (
   <section id="faq" className="mx-auto max-w-3xl px-4 pb-16 md:pb-24">
     <h2 className="display mb-6 text-3xl sm:text-4xl">FAQ</h2>
     {FAQ.map(([question, answer]) => (
-      <Accordion key={question} disableGutters sx={{ bgcolor: 'transparent', border: '1px solid #ffffff22', mb: 1, '&:before': { display: 'none' } }}>
+      <Accordion
+        key={question}
+        disableGutters
+        sx={{ bgcolor: 'transparent', border: '1px solid #ffffff22', mb: 1, '&:before': { display: 'none' } }}
+      >
         <AccordionSummary expandIcon={<ChevronDown className="text-ac" />}><b>{question}</b></AccordionSummary>
         <AccordionDetails className="text-white/70">{answer}</AccordionDetails>
       </Accordion>
@@ -140,11 +176,26 @@ export function Newsletter() {
         <h2 className="display text-3xl sm:text-5xl">JOIN THE DROP LIST</h2>
         <p className="my-4">Early access + 10% off your first order.</p>
         {subscribed ? (
-          <p role="status" className="display inline-flex items-center gap-2 bg-black px-5 py-3 text-ac"><Check size={18} />You're in.</p>
+          
+            <p role="status" className="display inline-flex items-center gap-2 bg-black px-5 py-3 text-ac">
+              <Check size={18} />
+              You're in.
+            </p>
+          
         ) : (
           <>
             <div className="flex flex-col gap-2 sm:flex-row">
-              <input value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && subscribe()} type="email" autoComplete="email" aria-label="Email" aria-invalid={Boolean(error)} placeholder="you@email.com" className="h-12 flex-1 border-2 border-black bg-white px-4 outline-none" />
+              <input
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && subscribe()}
+                type="email"
+                autoComplete="email"
+                aria-label="Email"
+                aria-invalid={Boolean(error)}
+                placeholder="you@email.com"
+                className="h-12 flex-1 border-2 border-black bg-white px-4 outline-none"
+              />
               <Button className="bg-black text-white" onClick={subscribe}>Subscribe</Button>
             </div>
             {error && <p role="alert" className="mt-2 text-sm font-bold">{error}</p>}
@@ -163,9 +214,34 @@ const SOCIAL_LINKS: { name: string; href: string; Icon: IconType }[] = [
   { name: 'Discord', href: 'https://discord.com/', Icon: FaDiscord },
 ]
 const FOOTER_LINKS: { heading: string; links: [label: string, href: string][] }[] = [
-  { heading: 'Shop', links: [['All gear', '/shop'], ['Deals', '/#deals'], ['Wishlist', '/wishlist'], ['Track order', '/track']] },
-  { heading: 'Support', links: [['Journal', '/blog'], ['Contact', '/contact'], ['Shipping and returns', '/shipping'], ['FAQ', '/#faq'], ['About', '/#about']] },
-  { heading: 'Legal', links: [['Privacy Policy', '/privacy'], ['Terms of Service', '/terms'], ['Sign in', '/login'], ['Create account', '/register']] },
+  {
+    heading: 'Shop',
+    links: [
+      ['All gear', '/shop'],
+      ['Deals', '/#deals'],
+      ['Wishlist', '/wishlist'],
+      ['Track order', '/track'],
+    ],
+  },
+  {
+    heading: 'Support',
+    links: [
+      ['Journal', '/blog'],
+      ['Contact', '/contact'],
+      ['Shipping and returns', '/shipping'],
+      ['FAQ', '/#faq'],
+      ['About', '/#about'],
+    ],
+  },
+  {
+    heading: 'Legal',
+    links: [
+      ['Privacy Policy', '/privacy'],
+      ['Terms of Service', '/terms'],
+      ['Sign in', '/login'],
+      ['Create account', '/register'],
+    ],
+  },
 ]
 
 export const Footer = () => (
@@ -184,11 +260,15 @@ export const Footer = () => (
         <div key={heading}>
           <h4 className="display mb-3 text-ac">{heading}</h4>
           {links.map(([label, href]) => (
-            <a key={label} href={href} className="block py-1 text-sm text-white/60 hover:text-white">{label}</a>
+            <Link key={label} to={href} className="block py-1 text-sm text-white/60 hover:text-white">
+              {label}
+            </Link>
           ))}
         </div>
       ))}
     </div>
-    <p className="mx-auto mt-10 max-w-7xl text-xs text-white/50">&copy; 2026 ShopiKa. All rights reserved. Product data and reviews via dummyjson.com.</p>
+    <p className="mx-auto mt-10 max-w-7xl text-xs text-white/50">
+      &copy; 2026 ShopiKa. All rights reserved. Product data and reviews via dummyjson.com.
+    </p>
   </footer>
 )
