@@ -14,5 +14,13 @@ export function priceCart(lines: CartLine[], coupon: string) {
   const discount = promoApplied ? subtotal * PROMO_RATE : 0
   const discounted = subtotal - discount
   const shipping = lines.length === 0 || discounted >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE
-  return { itemCount, subtotal, promoApplied, discount, shipping, total: discounted + shipping, freeShippingGap: Math.max(0, FREE_SHIPPING_THRESHOLD - discounted) }
+  return {
+    itemCount,
+    subtotal,
+    promoApplied,
+    discount,
+    shipping,
+    total: discounted + shipping,
+    freeShippingGap: Math.max(0, FREE_SHIPPING_THRESHOLD - discounted),
+  }
 }

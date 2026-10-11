@@ -1,7 +1,25 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
-import { Shirt, Sparkles, Gem, Footprints, Watch, ShoppingBag, Glasses, Tag, Truck, RefreshCw, ShieldCheck, Headphones, ChevronDown, Quote, Check, ArrowUpRight, type LucideIcon } from 'lucide-react'
+import {
+  Shirt,
+  Sparkles,
+  Gem,
+  Footprints,
+  Watch,
+  ShoppingBag,
+  Glasses,
+  Tag,
+  Truck,
+  RefreshCw,
+  ShieldCheck,
+  Headphones,
+  ChevronDown,
+  Quote,
+  Check,
+  ArrowUpRight,
+  type LucideIcon,
+} from 'lucide-react'
 import { FaInstagram, FaTiktok, FaXTwitter, FaDiscord } from 'react-icons/fa6'
 import type { IconType } from 'react-icons'
 import { categoriesOf } from '@/data/products'
@@ -30,22 +48,38 @@ export function Categories() {
   const products = useProducts()
   return (
     <section className="mx-auto max-w-7xl px-4 pb-16 md:pb-24">
-      <h2 className="display mb-6 text-3xl sm:text-4xl md:text-6xl">SHOP BY <span className="grad">VIBE</span></h2>
+      <h2 className="display mb-6 text-3xl sm:text-4xl md:text-6xl">
+        SHOP BY <span className="grad">VIBE</span>
+      </h2>
       <div className="grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-4">
-        {categoriesOf(products).slice(0, MAX_CATEGORY_TILES).map((category) => {
-          const Icon = CATEGORY_ICONS[category] ?? Tag
-          const cover = products.find((p) => p.cat === category)
-          if (!cover) return null
-          return (
-            <Link key={category} to={`/shop?cat=${encodeURIComponent(category)}`} className="group relative block aspect-square overflow-hidden border-2 border-white/10 bg-neutral-100 hover:border-ac">
-              <img src={cover.img} alt="" loading="lazy" className="h-full w-full object-contain p-6 transition duration-500 group-hover:scale-110" />
-              <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-black p-3">
-                <span className="display flex items-center gap-2 text-sm"><Icon size={18} className="text-ac" />{category}</span>
-                <ArrowUpRight size={18} className="text-ac" />
-              </div>
-            </Link>
-          )
-        })}
+        {categoriesOf(products)
+          .slice(0, MAX_CATEGORY_TILES)
+          .map((category) => {
+            const Icon = CATEGORY_ICONS[category] ?? Tag
+            const cover = products.find((p) => p.cat === category)
+            if (!cover) return null
+            return (
+              <Link
+                key={category}
+                to={`/shop?cat=${encodeURIComponent(category)}`}
+                className="group relative block aspect-square overflow-hidden border-2 border-white/10 bg-neutral-100 hover:border-ac"
+              >
+                <img
+                  src={cover.img}
+                  alt=""
+                  loading="lazy"
+                  className="h-full w-full object-contain p-6 transition duration-500 group-hover:scale-110"
+                />
+                <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-black p-3">
+                  <span className="display flex items-center gap-2 text-sm">
+                    <Icon size={18} className="text-ac" />
+                    {category}
+                  </span>
+                  <ArrowUpRight size={18} className="text-ac" />
+                </div>
+              </Link>
+            )
+          })}
       </div>
     </section>
   )
@@ -82,7 +116,9 @@ export function Testimonials() {
   if (!quotes.length) return null
   return (
     <section className="mx-auto max-w-7xl px-4 py-16 md:py-24">
-      <h2 className="display mb-8 text-3xl sm:text-4xl md:text-6xl">THE <span className="grad">CREW</span> SAYS</h2>
+      <h2 className="display mb-8 text-3xl sm:text-4xl md:text-6xl">
+        THE <span className="grad">CREW</span> SAYS
+      </h2>
       <div className="grid gap-5 md:grid-cols-3">
         {quotes.map((quote) => (
           <figure key={quote.id} className="border-2 border-white/10 bg-card p-6">
@@ -113,8 +149,14 @@ export const Faq = () => (
   <section id="faq" className="mx-auto max-w-3xl px-4 pb-16 md:pb-24">
     <h2 className="display mb-6 text-3xl sm:text-4xl">FAQ</h2>
     {FAQ.map(([question, answer]) => (
-      <Accordion key={question} disableGutters sx={{ bgcolor: 'transparent', border: '1px solid #ffffff22', mb: 1, '&:before': { display: 'none' } }}>
-        <AccordionSummary expandIcon={<ChevronDown className="text-ac" />}><b>{question}</b></AccordionSummary>
+      <Accordion
+        key={question}
+        disableGutters
+        sx={{ bgcolor: 'transparent', border: '1px solid #ffffff22', mb: 1, '&:before': { display: 'none' } }}
+      >
+        <AccordionSummary expandIcon={<ChevronDown className="text-ac" />}>
+          <b>{question}</b>
+        </AccordionSummary>
         <AccordionDetails className="text-white/70">{answer}</AccordionDetails>
       </Accordion>
     ))}
@@ -140,14 +182,33 @@ export function Newsletter() {
         <h2 className="display text-3xl sm:text-5xl">JOIN THE DROP LIST</h2>
         <p className="my-4">Early access + 10% off your first order.</p>
         {subscribed ? (
-          <p role="status" className="display inline-flex items-center gap-2 bg-black px-5 py-3 text-ac"><Check size={18} />You're in.</p>
+          <p role="status" className="display inline-flex items-center gap-2 bg-black px-5 py-3 text-ac">
+            <Check size={18} />
+            You're in.
+          </p>
         ) : (
           <>
             <div className="flex flex-col gap-2 sm:flex-row">
-              <input value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && subscribe()} type="email" autoComplete="email" aria-label="Email" aria-invalid={Boolean(error)} placeholder="you@email.com" className="h-12 flex-1 border-2 border-black bg-white px-4 outline-none" />
-              <Button className="bg-black text-white" onClick={subscribe}>Subscribe</Button>
+              <input
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && subscribe()}
+                type="email"
+                autoComplete="email"
+                aria-label="Email"
+                aria-invalid={Boolean(error)}
+                placeholder="you@email.com"
+                className="h-12 flex-1 border-2 border-black bg-white px-4 outline-none"
+              />
+              <Button className="bg-black text-white" onClick={subscribe}>
+                Subscribe
+              </Button>
             </div>
-            {error && <p role="alert" className="mt-2 text-sm font-bold">{error}</p>}
+            {error && (
+              <p role="alert" className="mt-2 text-sm font-bold">
+                {error}
+              </p>
+            )}
           </>
         )}
       </div>
@@ -163,9 +224,34 @@ const SOCIAL_LINKS: { name: string; href: string; Icon: IconType }[] = [
   { name: 'Discord', href: 'https://discord.com/', Icon: FaDiscord },
 ]
 const FOOTER_LINKS: { heading: string; links: [label: string, href: string][] }[] = [
-  { heading: 'Shop', links: [['All gear', '/shop'], ['Deals', '/#deals'], ['Wishlist', '/wishlist'], ['Track order', '/track']] },
-  { heading: 'Support', links: [['Journal', '/blog'], ['Contact', '/contact'], ['Shipping and returns', '/shipping'], ['FAQ', '/#faq'], ['About', '/#about']] },
-  { heading: 'Legal', links: [['Privacy Policy', '/privacy'], ['Terms of Service', '/terms'], ['Sign in', '/login'], ['Create account', '/register']] },
+  {
+    heading: 'Shop',
+    links: [
+      ['All gear', '/shop'],
+      ['Deals', '/#deals'],
+      ['Wishlist', '/wishlist'],
+      ['Track order', '/track'],
+    ],
+  },
+  {
+    heading: 'Support',
+    links: [
+      ['Journal', '/blog'],
+      ['Contact', '/contact'],
+      ['Shipping and returns', '/shipping'],
+      ['FAQ', '/#faq'],
+      ['About', '/#about'],
+    ],
+  },
+  {
+    heading: 'Legal',
+    links: [
+      ['Privacy Policy', '/privacy'],
+      ['Terms of Service', '/terms'],
+      ['Sign in', '/login'],
+      ['Create account', '/register'],
+    ],
+  },
 ]
 
 export const Footer = () => (
@@ -176,7 +262,9 @@ export const Footer = () => (
         <p className="mt-3 text-sm text-white/50">Loud streetwear from the future.</p>
         <div className="mt-4 flex gap-4 text-xl text-ac">
           {SOCIAL_LINKS.map(({ name, href, Icon }) => (
-            <a key={name} href={href} target="_blank" rel="noopener noreferrer" aria-label={name}><Icon /></a>
+            <a key={name} href={href} target="_blank" rel="noopener noreferrer" aria-label={name}>
+              <Icon />
+            </a>
           ))}
         </div>
       </div>
@@ -184,11 +272,15 @@ export const Footer = () => (
         <div key={heading}>
           <h4 className="display mb-3 text-ac">{heading}</h4>
           {links.map(([label, href]) => (
-            <a key={label} href={href} className="block py-1 text-sm text-white/60 hover:text-white">{label}</a>
+            <a key={label} href={href} className="block py-1 text-sm text-white/60 hover:text-white">
+              {label}
+            </a>
           ))}
         </div>
       ))}
     </div>
-    <p className="mx-auto mt-10 max-w-7xl text-xs text-white/50">&copy; 2026 ShopiKa. All rights reserved. Product data and reviews via dummyjson.com.</p>
+    <p className="mx-auto mt-10 max-w-7xl text-xs text-white/50">
+      &copy; 2026 ShopiKa. All rights reserved. Product data and reviews via dummyjson.com.
+    </p>
   </footer>
 )

@@ -14,13 +14,25 @@ export function MobileBar() {
   if (pathname.startsWith('/product')) return null
   const { subtotal } = priceCart(cartLines(cart, products), coupon)
   return (
-    <nav aria-label="Quick actions" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }} className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-3 border-t-2 border-ac bg-black/90 backdrop-blur md:hidden">
-      <a href="/shop" className={ITEM_CLASS}><Store size={20} />Shop</a>
+    <nav
+      aria-label="Quick actions"
+      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-3 border-t-2 border-ac bg-black/90 backdrop-blur md:hidden"
+    >
+      <a href="/shop" className={ITEM_CLASS}>
+        <Store size={20} />
+        Shop
+      </a>
       <button type="button" onClick={() => setCompareOpen(true)} className={ITEM_CLASS}>
-        <Badge badgeContent={compare.length} color="secondary"><GitCompare size={20} /></Badge>
+        <Badge badgeContent={compare.length} color="secondary">
+          <GitCompare size={20} />
+        </Badge>
         Compare
       </button>
-      <button type="button" onClick={() => setCartOpen(true)} className={ITEM_CLASS}><ShoppingBag size={20} />{usd(subtotal)}</button>
+      <button type="button" onClick={() => setCartOpen(true)} className={ITEM_CLASS}>
+        <ShoppingBag size={20} />
+        {usd(subtotal)}
+      </button>
     </nav>
   )
 }

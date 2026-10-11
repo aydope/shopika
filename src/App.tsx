@@ -48,11 +48,21 @@ export default function App() {
     return () => controller.abort()
   }, [loadCatalog])
 
-  useJsonLd(products.length ? { '@context': 'https://schema.org', '@type': 'ItemList', itemListElement: products.map((p, i) => ({ '@type': 'ListItem', position: i + 1, name: p.name })) } : null)
+  useJsonLd(
+    products.length
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'ItemList',
+          itemListElement: products.map((p, i) => ({ '@type': 'ListItem', position: i + 1, name: p.name })),
+        }
+      : null,
+  )
 
   return (
     <>
-      <a href="#main" className="sr-only focus:not-sr-only">Skip to content</a>
+      <a href="#main" className="sr-only focus:not-sr-only">
+        Skip to content
+      </a>
       <ScrollManager />
       <ScrollUI />
       <AnnounceBar />
@@ -61,7 +71,14 @@ export default function App() {
         <Suspense fallback={<p className="p-20 text-center text-white/60">Loading...</p>}>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/shop" element={<div className="pt-10"><Catalog /></div>} />
+            <Route
+              path="/shop"
+              element={
+                <div className="pt-10">
+                  <Catalog />
+                </div>
+              }
+            />
             <Route path="/product/:id" element={<ProductPage />} />
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/checkout" element={<Checkout />} />

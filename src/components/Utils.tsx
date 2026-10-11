@@ -49,9 +49,17 @@ export function ScrollUI() {
 
   return (
     <>
-      <motion.div style={{ scaleX: scrollYProgress }} className="fixed inset-x-0 top-0 z-50 h-1 origin-left bg-gradient-to-r from-ac to-ac2" />
+      <motion.div
+        style={{ scaleX: scrollYProgress }}
+        className="fixed inset-x-0 top-0 z-50 h-1 origin-left bg-gradient-to-r from-ac to-ac2"
+      />
       {showBackToTop && (
-        <button type="button" aria-label="Back to top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="fixed bottom-20 right-4 z-40 grid h-11 w-11 place-items-center border-2 border-ac bg-black text-ac md:bottom-6">
+        <button
+          type="button"
+          aria-label="Back to top"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="fixed bottom-20 right-4 z-40 grid h-11 w-11 place-items-center border-2 border-ac bg-black text-ac md:bottom-6"
+        >
           <ArrowUp size={18} />
         </button>
       )}
@@ -122,10 +130,22 @@ export function CookieBanner() {
     setAccepted(true)
   }
   return (
-    <div role="dialog" aria-label="Cookie preferences" className="fixed inset-x-3 bottom-20 z-50 mx-auto flex max-w-xl flex-col gap-3 border-2 border-ac bg-black p-4 sm:flex-row sm:items-center md:bottom-4">
+    <div
+      role="dialog"
+      aria-label="Cookie preferences"
+      className="fixed inset-x-3 bottom-20 z-50 mx-auto flex max-w-xl flex-col gap-3 border-2 border-ac bg-black p-4 sm:flex-row sm:items-center md:bottom-4"
+    >
       <Cookie className="shrink-0 text-ac" />
-      <p className="flex-1 text-sm text-white/80">We use essential cookies to keep your cart and preferences. Read our <a href="/privacy" className="text-ac underline">Privacy Policy</a>.</p>
-      <button type="button" onClick={accept} className="h-11 bg-ac px-5 text-sm font-bold uppercase text-black">Got it</button>
+      <p className="flex-1 text-sm text-white/80">
+        We use essential cookies to keep your cart and preferences. Read our{' '}
+        <a href="/privacy" className="text-ac underline">
+          Privacy Policy
+        </a>
+        .
+      </p>
+      <button type="button" onClick={accept} className="h-11 bg-ac px-5 text-sm font-bold uppercase text-black">
+        Got it
+      </button>
     </div>
   )
 }

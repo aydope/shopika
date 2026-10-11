@@ -37,15 +37,18 @@ type StoreState = {
   setCoupon: (code: string) => void
 }
 
-const isReview = (v: unknown): v is Review => isRecord(v) && hasString(v, 'id') && hasString(v, 'name') && hasString(v, 'text') && hasNumber(v, 'likes')
-const isOrder = (v: unknown): v is Order => isRecord(v) && hasString(v, 'id') && hasString(v, 'date') && hasString(v, 'status') && hasNumber(v, 'total') && Array.isArray(v.items)
+const isReview = (v: unknown): v is Review =>
+  isRecord(v) && hasString(v, 'id') && hasString(v, 'name') && hasString(v, 'text') && hasNumber(v, 'likes')
+const isOrder = (v: unknown): v is Order =>
+  isRecord(v) && hasString(v, 'id') && hasString(v, 'date') && hasString(v, 'status') && hasNumber(v, 'total') && Array.isArray(v.items)
 
 /** localStorage content can be stale or edited by hand, so each persisted field is checked before it is trusted. */
 function readPersisted(stored: unknown): Partial<StoreState> {
   if (!isRecord(stored)) return {}
   const restored: Partial<StoreState> = {}
   const { cart, likes, compare, recent, voted, premium, orders, comments } = stored
-  if (isRecord(cart)) restored.cart = Object.fromEntries(Object.entries(cart).filter((entry): entry is [string, number] => typeof entry[1] === 'number'))
+  if (isRecord(cart))
+    restored.cart = Object.fromEntries(Object.entries(cart).filter((entry): entry is [string, number] => typeof entry[1] === 'number'))
   if (isStringArray(likes)) restored.likes = likes
   if (isStringArray(compare)) restored.compare = compare
   if (isStringArray(recent)) restored.recent = recent
@@ -64,7 +67,8 @@ function readPersisted(stored: unknown): Partial<StoreState> {
 
 const MAX_COMPARE = 3
 const MAX_RECENT = 8
-const toggleItem = (list: string[], item: string, max = Infinity) => (list.includes(item) ? list.filter((x) => x !== item) : [...list, item].slice(-max))
+const toggleItem = (list: string[], item: string, max = Infinity) =>
+  list.includes(item) ? list.filter((x) => x !== item) : [...list, item].slice(-max)
 
 /** Cart keys have the form `productId:size:color`. Lines whose product is not in the catalog are dropped. */
 export function cartLines(cart: Record<string, number>, products: Product[]): CartLine[] {
@@ -103,22 +107,40 @@ export const useStore = create<StoreState>()(
           set({ catalogStatus: 'error' })
         }
       },
-      addToCart: (id, size = '', color = '', quantity = 1) => set((s) => { const key = `${id}:${size}:${color}`; return { cart: { ...s.cart, [key]: (s.cart[key] ?? 0) + quantity }, cartOpen: true } }),
-      decrementLine: (key) => set((s) => {
-        const { [key]: qty = 0, ...rest } = s.cart
-        return { cart: qty > 1 ? { ...rest, [key]: qty - 1 } : rest }
-      }),
-      removeLine: (key) => set((s) => { const { [key]: _removed, ...rest } = s.cart; return { cart: rest } }),
+      addToCart: (id, size = '', color = '', quantity = 1) =>
+        set((s) => {
+          const key = `${id}:${size}:${color}`
+          return { cart: { ...s.cart, [key]: (s.cart[key] ?? 0) + quantity }, cartOpen: true }
+        }),
+      decrementLine: (key) =>
+        set((s) => {
+          const { [key]: qty = 0, ...rest } = s.cart
+          return { cart: qty > 1 ? { ...rest, [key]: qty - 1 } : rest }
+        }),
+      removeLine: (key) =>
+        set((s) => {
+          const { [key]: _removed, ...rest } = s.cart
+          return { cart: rest }
+        }),
       toggleLike: (id) => set((s) => ({ likes: toggleItem(s.likes, id) })),
       toggleCompare: (id) => set((s) => ({ compare: toggleItem(s.compare, id, MAX_COMPARE) })),
       markViewed: (id) => set((s) => ({ recent: [id, ...s.recent.filter((x) => x !== id)].slice(0, MAX_RECENT) })),
-      addComment: (threadKey, comment) => set((s) => ({ comments: { ...s.comments, [threadKey]: [comment, ...(s.comments[threadKey] ?? [])] } })),
+      addComment: (threadKey, comment) =>
+        set((s) => ({ comments: { ...s.comments, [threadKey]: [comment, ...(s.comments[threadKey] ?? [])] } })),
       toggleVote: (commentId) => set((s) => ({ voted: toggleItem(s.voted, commentId) })),
       placeOrder: (total) => {
         const id = 'SK-' + Date.now().toString().slice(-6)
         const { cart, products } = get()
-        const items = cartLines(cart, products).map((l) => ({ name: l.product.name, qty: l.qty, size: [l.size, l.color].filter(Boolean).join(', ') }))
-        set((s) => ({ orders: [{ id, date: new Date().toISOString().slice(0, 10), total, status: 'Processing', items }, ...s.orders], cart: {}, coupon: '' }))
+        const items = cartLines(cart, products).map((l) => ({
+          name: l.product.name,
+          qty: l.qty,
+          size: [l.size, l.color].filter(Boolean).join(', '),
+        }))
+        set((s) => ({
+          orders: [{ id, date: new Date().toISOString().slice(0, 10), total, status: 'Processing', items }, ...s.orders],
+          cart: {},
+          coupon: '',
+        }))
         return id
       },
       togglePremium: () => set((s) => ({ premium: !s.premium })),
@@ -126,7 +148,20 @@ export const useStore = create<StoreState>()(
       setCompareOpen: (compareOpen) => set({ compareOpen }),
       setCoupon: (coupon) => set({ coupon }),
     }),
-    { name: 'shopika', merge: (stored, current) => ({ ...current, ...readPersisted(stored) }), partialize: (s) => ({ cart: s.cart, likes: s.likes, compare: s.compare, recent: s.recent, comments: s.comments, voted: s.voted, orders: s.orders, premium: s.premium }) },
+    {
+      name: 'shopika',
+      merge: (stored, current) => ({ ...current, ...readPersisted(stored) }),
+      partialize: (s) => ({
+        cart: s.cart,
+        likes: s.likes,
+        compare: s.compare,
+        recent: s.recent,
+        comments: s.comments,
+        voted: s.voted,
+        orders: s.orders,
+        premium: s.premium,
+      }),
+    },
   ),
 )
 

@@ -15,7 +15,8 @@ export const needsOptions = (product: Product) => product.kind !== 'none'
 export function useQuickAdd() {
   const navigate = useNavigate()
   const addToCart = useStore((s) => s.addToCart)
-  return (product: Product) => (needsOptions(product) ? navigate(`/product/${product.id}`) : addToCart(product.id, '', product.colors[0][0]))
+  return (product: Product) =>
+    needsOptions(product) ? navigate(`/product/${product.id}`) : addToCart(product.id, '', product.colors[0][0])
 }
 
 export function ProductCard({ p, i = 0 }: { p: Product; i?: number }) {
@@ -35,17 +36,34 @@ export function ProductCard({ p, i = 0 }: { p: Product; i?: number }) {
     >
       <div className="relative aspect-square overflow-hidden bg-neutral-100">
         <Link to={`/product/${p.id}`} aria-label={p.name}>
-          <img src={p.img} alt={p.name} loading="lazy" className="h-full w-full object-contain p-4 transition duration-500 group-hover:scale-110" />
+          <img
+            src={p.img}
+            alt={p.name}
+            loading="lazy"
+            className="h-full w-full object-contain p-4 transition duration-500 group-hover:scale-110"
+          />
         </Link>
         <span className="display absolute left-2 top-2 bg-ac px-2 py-1 text-[10px] text-black">{p.tag}</span>
         {p.stock <= LOW_STOCK_THRESHOLD && (
           <span className="absolute bottom-2 left-2 bg-ac2 px-2 py-1 text-[10px] font-bold uppercase text-black">Only {p.stock} left</span>
         )}
         <div className="absolute right-2 top-2 flex flex-col gap-2">
-          <button type="button" aria-label="Like" aria-pressed={liked} onClick={() => toggleLike(p.id)} className={cn('grid h-10 w-10 place-items-center bg-black/80 text-white', liked && 'text-ac2')}>
+          <button
+            type="button"
+            aria-label="Like"
+            aria-pressed={liked}
+            onClick={() => toggleLike(p.id)}
+            className={cn('grid h-10 w-10 place-items-center bg-black/80 text-white', liked && 'text-ac2')}
+          >
             <Heart size={18} fill={liked ? 'currentColor' : 'none'} />
           </button>
-          <button type="button" aria-label="Compare" aria-pressed={comparing} onClick={() => toggleCompare(p.id)} className={cn('grid h-10 w-10 place-items-center bg-black/80 text-white', comparing && 'text-ac')}>
+          <button
+            type="button"
+            aria-label="Compare"
+            aria-pressed={comparing}
+            onClick={() => toggleCompare(p.id)}
+            className={cn('grid h-10 w-10 place-items-center bg-black/80 text-white', comparing && 'text-ac')}
+          >
             <GitCompare size={18} />
           </button>
         </div>

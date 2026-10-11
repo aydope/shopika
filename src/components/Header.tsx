@@ -47,7 +47,9 @@ export function Header() {
   const categories = categoriesOf(products)
   const { itemCount } = priceCart(cartLines(cart, products), coupon)
   const needle = query.trim().toLowerCase()
-  const results = needle ? products.filter((p) => `${p.name} ${p.cat} ${p.tag}`.toLowerCase().includes(needle)).slice(0, MAX_SEARCH_RESULTS) : []
+  const results = needle
+    ? products.filter((p) => `${p.name} ${p.cat} ${p.tag}`.toLowerCase().includes(needle)).slice(0, MAX_SEARCH_RESULTS)
+    : []
   const accountHref = user ? (user.role === 'admin' ? '/admin' : '/account') : '/login'
 
   useEffect(() => {
@@ -72,15 +74,34 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b-2 border-ac bg-black/80 backdrop-blur" style={{ paddingTop: 'env(safe-area-inset-top)' }} onMouseLeave={() => setMegaOpen(false)}>
+    <header
+      className="sticky top-0 z-40 border-b-2 border-ac bg-black/80 backdrop-blur"
+      style={{ paddingTop: 'env(safe-area-inset-top)' }}
+      onMouseLeave={() => setMegaOpen(false)}
+    >
       <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-2 p-3 sm:gap-4 sm:p-4">
-        <button type="button" className="grid h-10 w-10 place-items-center md:hidden" aria-label="Open menu" onClick={() => setMenuOpen(true)}><Menu /></button>
+        <button
+          type="button"
+          className="grid h-10 w-10 place-items-center md:hidden"
+          aria-label="Open menu"
+          onClick={() => setMenuOpen(true)}
+        >
+          <Menu />
+        </button>
         <Logo />
         <nav className="hidden gap-6 text-sm font-bold uppercase md:flex" aria-label="Main">
-          <a href="/shop" onMouseEnter={() => setMegaOpen(true)} onFocus={() => setMegaOpen(true)} className="hover:text-ac">Shop</a>
-          <a href="#deals" className="hover:text-ac">Deals</a>
-          <a href="#about" className="hover:text-ac">About</a>
-          <a href="/blog" className="hover:text-ac">Journal</a>
+          <a href="/shop" onMouseEnter={() => setMegaOpen(true)} onFocus={() => setMegaOpen(true)} className="hover:text-ac">
+            Shop
+          </a>
+          <a href="#deals" className="hover:text-ac">
+            Deals
+          </a>
+          <a href="#about" className="hover:text-ac">
+            About
+          </a>
+          <a href="/blog" className="hover:text-ac">
+            Journal
+          </a>
         </nav>
         <div className={`relative order-last w-full md:order-none md:ml-auto md:block md:max-w-sm ${searchOpen ? 'block' : 'hidden'}`}>
           <Search size={16} className="absolute left-3 top-3.5 text-ac" />
@@ -115,12 +136,48 @@ export function Header() {
           )}
         </div>
         <div className="ml-auto flex items-center gap-1 md:ml-0">
-          <Button variant="ghost" size="icon" className="md:hidden" aria-label="Toggle search" aria-expanded={searchOpen} onClick={() => setSearchOpen((open) => !open)}><Search size={20} /></Button>
-          <a href={accountHref} aria-label={user ? 'My account' : 'Sign in'} className="hidden h-11 w-11 place-items-center hover:text-ac md:grid"><User size={20} /></a>
-          <a href="/wishlist" aria-label="Wishlist" className="hidden h-11 w-11 place-items-center md:grid"><Badge badgeContent={likes.length} color="secondary"><Heart size={20} /></Badge></a>
-          <Button variant="ghost" size="icon" className="hidden md:inline-flex" aria-label="Compare" onClick={() => setCompareOpen(true)}><Badge badgeContent={compare.length} color="secondary"><GitCompare size={20} /></Badge></Button>
-          <Button variant={premium ? 'solid' : 'outline'} size="sm" onClick={togglePremium} aria-pressed={premium} aria-label="Toggle VIP gold theme"><Crown size={14} /><span className="hidden sm:inline">{premium ? 'Gold' : 'VIP'}</span></Button>
-          <Button variant="ghost" size="icon" aria-label="Open cart" onClick={() => setCartOpen(true)}><Badge badgeContent={itemCount} color="primary"><ShoppingBag size={20} /></Badge></Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            aria-label="Toggle search"
+            aria-expanded={searchOpen}
+            onClick={() => setSearchOpen((open) => !open)}
+          >
+            <Search size={20} />
+          </Button>
+          <a
+            href={accountHref}
+            aria-label={user ? 'My account' : 'Sign in'}
+            className="hidden h-11 w-11 place-items-center hover:text-ac md:grid"
+          >
+            <User size={20} />
+          </a>
+          <a href="/wishlist" aria-label="Wishlist" className="hidden h-11 w-11 place-items-center md:grid">
+            <Badge badgeContent={likes.length} color="secondary">
+              <Heart size={20} />
+            </Badge>
+          </a>
+          <Button variant="ghost" size="icon" className="hidden md:inline-flex" aria-label="Compare" onClick={() => setCompareOpen(true)}>
+            <Badge badgeContent={compare.length} color="secondary">
+              <GitCompare size={20} />
+            </Badge>
+          </Button>
+          <Button
+            variant={premium ? 'solid' : 'outline'}
+            size="sm"
+            onClick={togglePremium}
+            aria-pressed={premium}
+            aria-label="Toggle VIP gold theme"
+          >
+            <Crown size={14} />
+            <span className="hidden sm:inline">{premium ? 'Gold' : 'VIP'}</span>
+          </Button>
+          <Button variant="ghost" size="icon" aria-label="Open cart" onClick={() => setCartOpen(true)}>
+            <Badge badgeContent={itemCount} color="primary">
+              <ShoppingBag size={20} />
+            </Badge>
+          </Button>
         </div>
       </div>
       {megaOpen && (
@@ -128,33 +185,64 @@ export function Header() {
           <div className="mx-auto grid max-w-7xl grid-cols-4 gap-6 p-8">
             {categories.map((category) => (
               <div key={category}>
-                <h4 className="display mb-3 text-ac"><a href={`/shop?cat=${encodeURIComponent(category)}`}>{category}</a></h4>
-                {products.filter((p) => p.cat === category).map((p) => (
-                  <a key={p.id} href={`/product/${p.id}`} className="block py-1 text-sm hover:translate-x-1 hover:text-ac2">{p.name}</a>
-                ))}
+                <h4 className="display mb-3 text-ac">
+                  <a href={`/shop?cat=${encodeURIComponent(category)}`}>{category}</a>
+                </h4>
+                {products
+                  .filter((p) => p.cat === category)
+                  .map((p) => (
+                    <a key={p.id} href={`/product/${p.id}`} className="block py-1 text-sm hover:translate-x-1 hover:text-ac2">
+                      {p.name}
+                    </a>
+                  ))}
               </div>
             ))}
           </div>
         </div>
       )}
-      <Drawer anchor="left" open={menuOpen} onClose={() => setMenuOpen(false)} PaperProps={{ sx: { width: '82%', maxWidth: 340, p: 3, border: '2px solid var(--ac)' } }}>
+      <Drawer
+        anchor="left"
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        PaperProps={{ sx: { width: '82%', maxWidth: 340, p: 3, border: '2px solid var(--ac)' } }}
+      >
         <div className="mb-4 flex items-center justify-between">
           <Logo />
-          <button type="button" aria-label="Close menu" className="grid h-11 w-11 place-items-center" onClick={() => setMenuOpen(false)}><X /></button>
+          <button type="button" aria-label="Close menu" className="grid h-11 w-11 place-items-center" onClick={() => setMenuOpen(false)}>
+            <X />
+          </button>
         </div>
         {/* Link clicks bubble up here so the drawer closes after any navigation. */}
         <nav onClick={() => setMenuOpen(false)} aria-label="Menu">
-          <a href="/shop" className={DRAWER_LINK_CLASS}>Shop all</a>
-          <a href="/wishlist" className={DRAWER_LINK_CLASS}>Wishlist</a>
-          <a href={accountHref} className={DRAWER_LINK_CLASS}>{user ? 'My account' : 'Sign in'}</a>
-          <a href="/blog" className={DRAWER_LINK_CLASS}>Journal</a>
-          <a href="/track" className={DRAWER_LINK_CLASS}>Track order</a>
-          <a href="/contact" className={DRAWER_LINK_CLASS}>Contact</a>
-          <a href="#deals" className={DRAWER_LINK_CLASS}>Deals</a>
-          <a href="#about" className={DRAWER_LINK_CLASS}>About</a>
+          <a href="/shop" className={DRAWER_LINK_CLASS}>
+            Shop all
+          </a>
+          <a href="/wishlist" className={DRAWER_LINK_CLASS}>
+            Wishlist
+          </a>
+          <a href={accountHref} className={DRAWER_LINK_CLASS}>
+            {user ? 'My account' : 'Sign in'}
+          </a>
+          <a href="/blog" className={DRAWER_LINK_CLASS}>
+            Journal
+          </a>
+          <a href="/track" className={DRAWER_LINK_CLASS}>
+            Track order
+          </a>
+          <a href="/contact" className={DRAWER_LINK_CLASS}>
+            Contact
+          </a>
+          <a href="#deals" className={DRAWER_LINK_CLASS}>
+            Deals
+          </a>
+          <a href="#about" className={DRAWER_LINK_CLASS}>
+            About
+          </a>
           <p className="display mb-1 mt-6 text-xs text-ac">CATEGORIES</p>
           {categories.map((category) => (
-            <a key={category} href={`/shop?cat=${encodeURIComponent(category)}`} className="block py-2 text-white/70">{category}</a>
+            <a key={category} href={`/shop?cat=${encodeURIComponent(category)}`} className="block py-2 text-white/70">
+              {category}
+            </a>
           ))}
         </nav>
       </Drawer>
