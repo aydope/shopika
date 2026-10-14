@@ -1,5 +1,5 @@
-import type { ComponentType } from 'react'
-import { GitCompare, Heart, Home, ShoppingBag, Store } from 'lucide-react'
+// import type { ComponentType } from 'react'
+import { GitCompare, Heart, Home, LucideIcon, ShoppingBag, Store } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 import { Badge } from '@mui/material'
 import { cartLines, useStore } from '@/store'
@@ -9,9 +9,7 @@ import { cn } from '@/lib/utils'
 const ITEM_CLASS = 'relative flex min-h-14 flex-col items-center justify-center gap-1 text-[11px] font-bold uppercase'
 const MIN_COMPARE = 2
 
-type Icon = ComponentType<{ size?: number }>
-
-type BarLinkProps = { to: string; active: boolean; Icon: Icon; label: string; count?: number }
+type BarLinkProps = { to: string; active: boolean; Icon: LucideIcon; label: string; count?: number }
 
 function BarLink({ to, active, Icon, label, count = 0 }: BarLinkProps) {
   return (
