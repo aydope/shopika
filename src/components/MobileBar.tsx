@@ -1,4 +1,3 @@
-// import type { ComponentType } from 'react'
 import { GitCompare, Heart, Home, LucideIcon, ShoppingBag, Store } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 import { Badge } from '@mui/material'
